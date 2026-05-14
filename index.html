@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>VageChain - Entry Experience</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=Manrope:wght@400&amp;family=Inter:wght@700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <!-- VageChain Effect System -->
+    <link rel="stylesheet" href="./effects.css" />
+    <script src="./effects.js" defer></script>
+    <style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Clean Solid Styles */
+        .glass-panel {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+        }
+
+        .glass-active {
+            background: #ffffff;
+            border: 1px solid #842bd2;
+        }
+
+        /* Glows / Blooms (Clean flat shadow fallback) */
+        .glow-primary {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .glow-tertiary {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Gradient Borders */
+        .border-gradient-br {
+            border: 1px solid #dee2e6;
+        }
+
+        .hero-bg {
+            background-color: #ffffff;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .animate-blink {
+            animation: blink 0.9s infinite;
+        }
+
+        @keyframes ticker-scroll {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(-50%, 0, 0);
+            }
+        }
+
+        @keyframes rainbow-gold-shine {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .ticker-container {
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(90deg,
+                    #bf953f 0%,
+                    #fcf6ba 12%,
+                    #b38728 25%,
+                    #ff5e62 40%,
+                    #ffd97d 50%,
+                    #00f2fe 60%,
+                    #b38728 75%,
+                    #fcf6ba 88%,
+                    #bf953f 100%);
+            background-size: 200% auto;
+            animation: rainbow-gold-shine 6s linear infinite;
+            padding: 0.75rem 0;
+            border-top: 1px solid rgba(170, 119, 28, 0.4);
+            border-bottom: 1px solid rgba(170, 119, 28, 0.4);
+            position: relative;
+            z-index: 20;
+        }
+
+        .ticker-wrap {
+            display: flex;
+            width: max-content;
+        }
+
+        .ticker-track-anim {
+            display: flex;
+            white-space: nowrap;
+            gap: 3rem;
+            padding-right: 3rem;
+            animation: ticker-scroll 30s linear infinite;
+        }
+
+        /* High-Premium Metallic Gold Button Matrix */
+        .btn-gold-fill {
+            background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fcf6ba 75%, #bf953f 100%);
+            background-size: 200% 200%;
+            color: #0a0a0a !important;
+            box-shadow: 0 4px 14px rgba(179, 135, 40, 0.4);
+            border: 1px solid rgba(252, 246, 186, 0.5) !important;
+            animation: metallic-glide 8s infinite linear;
+        }
+
+        .btn-gold-fill:hover {
+            box-shadow: 0 6px 20px rgba(179, 135, 40, 0.6);
+            transform: scale(1.02);
+        }
+
+        .btn-gold-hollow {
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(8px);
+            border: 2px solid transparent !important;
+            background-image: linear-gradient(white, white), linear-gradient(135deg, #bf953f, #fcf6ba, #b38728) !important;
+            background-origin: border-box !important;
+            background-clip: padding-box, border-box !important;
+            color: #b38728 !important;
+            box-shadow: 0 2px 10px rgba(179, 135, 40, 0.1);
+        }
+
+        .btn-gold-hollow:hover {
+            background: rgba(179, 135, 40, 0.08) !important;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), linear-gradient(135deg, #bf953f, #fcf6ba, #b38728) !important;
+            box-shadow: 0 4px 15px rgba(179, 135, 40, 0.2);
+            transform: scale(1.02);
+        }
+
+        @keyframes metallic-glide {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#e9ecef",
+                        "tertiary-fixed-dim": "#007a8f",
+                        "on-surface": "#000000",
+                        "on-primary-container": "#ffffff",
+                        "surface-variant": "#e9ecef",
+                        "surface-container-low": "#f1f3f5",
+                        "primary-container": "#842bd2",
+                        "surface-container": "#e9ecef",
+                        "secondary-container": "#f1f3f5",
+                        "secondary-fixed": "#dee2e6",
+                        "on-primary-fixed": "#000000",
+                        "on-primary-fixed-variant": "#842bd2",
+                        "tertiary-fixed": "#e9ecef",
+                        "tertiary-container": "#007a8f",
+                        "on-error": "#ffffff",
+                        "secondary": "#0053db",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#000000",
+                        "on-secondary-container": "#000000",
+                        "primary-fixed-dim": "#842bd2",
+                        "primary": "#842bd2",
+                        "tertiary": "#007a8f",
+                        "on-surface-variant": "#212529",
+                        "surface-tint": "#842bd2",
+                        "inverse-primary": "#ddb7ff",
+                        "on-secondary-fixed-variant": "#0053db",
+                        "background": "#ffffff",
+                        "surface": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "primary-fixed": "#dee2e6",
+                        "on-tertiary-fixed": "#000000",
+                        "error": "#ffb4ab",
+                        "on-tertiary-container": "#000000",
+                        "secondary-fixed-dim": "#0053db",
+                        "surface-container-high": "#dee2e6",
+                        "inverse-surface": "#11131a",
+                        "on-tertiary-fixed-variant": "#007a8f",
+                        "surface-dim": "#ffffff",
+                        "error-container": "#93000a",
+                        "inverse-on-surface": "#ffffff",
+                        "outline": "#adb5bd",
+                        "on-secondary-fixed": "#000000",
+                        "on-background": "#000000",
+                        "surface-container-highest": "#ced4da"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-md": "16px",
+                        "unit": "4px",
+                        "gutter": "24px",
+                        "margin": "40px",
+                        "stack-lg": "32px",
+                        "container-max": "1440px",
+                        "stack-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "body-md": [
+                            "Manrope"
+                        ],
+                        "headline-xl": [
+                            "Space Grotesk"
+                        ],
+                        "data-mono": [
+                            "Space Grotesk"
+                        ],
+                        "headline-lg": [
+                            "Space Grotesk"
+                        ],
+                        "body-lg": [
+                            "Manrope"
+                        ],
+                        "label-caps": [
+                            "Inter"
+                        ]
+                    },
+                    "fontSize": {
+                        "body-md": [
+                            "16px",
+                            {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "headline-xl": [
+                            "48px",
+                            {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "data-mono": [
+                            "14px",
+                            {
+                                "lineHeight": "1.4",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "500"
+                            }
+                        ],
+                        "headline-lg": [
+                            "32px",
+                            {
+                                "lineHeight": "1.2",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "body-lg": [
+                            "18px",
+                            {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "label-caps": [
+                            "12px",
+                            {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "700"
+                            }
+                        ]
+                    }
+                },
+            },
+        }
+    </script>
+    <link rel="stylesheet" href="./responsive.css" />
+    <script src="./responsive.js" defer></script>
+</head>
+
+<body
+    class="bg-background text-on-surface font-body-md min-h-screen flex flex-col overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+    <!-- Shared TopNav -->
+    <header
+        class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-outline-variant/30 bg-surface px-10 py-4">
+        <a href="./index.html" class="flex items-center gap-3 text-on-surface hover:opacity-90 transition-opacity">
+            <div class="size-8">
+                <svg fill="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="gold-glow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="0.8" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+                    <polygon points="10,10 50,10 28,24" fill="#2b5cf6" />
+                    <polygon points="90,10 50,10 72,24" fill="#2b5cf6" />
+                    <polygon points="10,10 28,24 30,50" fill="#1e40af" />
+                    <polygon points="90,10 72,24 70,50" fill="#1e40af" />
+                    <polygon points="50,10 28,24 30,50" fill="#00d8f6" />
+                    <polygon points="50,10 72,24 70,50" fill="#00d8f6" />
+                    <polygon points="50,10 30,50 70,50" fill="#2b5cf6" />
+                    <polygon points="30,50 70,50 50,60" fill="#00d8f6" />
+                    <polygon points="30,50 50,60 50,90" fill="#1e40af" />
+                    <polygon points="70,50 50,60 50,90" fill="#1e40af" />
+                    <g stroke="#ffca28" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"
+                        filter="url(#gold-glow)">
+                        <polygon points="10,10 90,10 50,90" fill="none" stroke-width="2.2" />
+                        <line x1="50" y1="10" x2="28" y2="24" />
+                        <line x1="50" y1="10" x2="72" y2="24" />
+                        <line x1="10" y1="10" x2="28" y2="24" />
+                        <line x1="90" y1="10" x2="72" y2="24" />
+                        <line x1="28" y1="24" x2="30" y2="50" />
+                        <line x1="72" y1="24" x2="70" y2="50" />
+                        <line x1="50" y1="10" x2="30" y2="50" />
+                        <line x1="50" y1="10" x2="70" y2="50" />
+                        <line x1="30" y1="50" x2="70" y2="50" />
+                        <line x1="30" y1="50" x2="50" y2="60" />
+                        <line x1="70" y1="50" x2="50" y2="60" />
+                        <line x1="50" y1="60" x2="50" y2="90" />
+                    </g>
+                </svg>
+            </div>
+            <h2 class="text-on-surface text-lg font-bold leading-tight tracking-tight">VageChain</h2>
+        </a>
+        <nav class="flex items-center gap-8">
+            <a class="text-primary font-bold text-sm leading-normal" href="./index.html">Home</a>
+            <a class="text-on-surface-variant text-sm font-medium leading-normal hover:text-primary transition-colors"
+                href="./solutions.html">Solutions</a>
+            <a class="text-on-surface-variant text-sm font-medium leading-normal hover:text-primary transition-colors"
+                href="./architecture.html">Architecture</a>
+            <a class="text-on-surface-variant text-sm font-medium leading-normal hover:text-primary transition-colors"
+                href="./roadmap.html">Roadmap</a>
+        </nav>
+    </header>
+    <!-- Main Hero Section -->
+    <!-- Main Scrollable Core Layout -->
+    <main
+        class="flex-grow relative flex flex-col items-center justify-start hero-bg min-h-[calc(100vh-65px)] overflow-y-auto overflow-x-hidden gap-16 pb-24">
+        <!-- Abstract 3D Network Background Representation (via Image and Gradients) -->
+        <!-- Full background image removed for cleaner, less busy design -->
+
+        <!-- Central Content Container (Hero) -->
+        <div
+            class="relative z-10 w-full max-w-container-max mx-auto px-margin flex flex-col items-center justify-center gap-stack-lg text-center min-h-[calc(100vh-120px)]">
+            <canvas id="chain-canvas" class="absolute inset-0 pointer-events-none z-0"></canvas>
+            <div class="relative z-10 flex flex-col gap-stack-md max-w-4xl pointer-events-none">
+                <h1
+                    class="font-headline-xl text-headline-xl text-on-surface leading-tight pointer-events-auto min-h-[55px]">
+                    <span id="typed-heading"></span><span class="text-[#0053db] animate-blink ml-1"
+                        id="typing-cursor">|</span>
+                </h1>
+                <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto pointer-events-auto">
+                    A Layer 1 designed to eliminate MEV, execute transactions in parallel, and scale with efficient
+                    state proofs.
+                </p>
+            </div>
+
+            <!-- Call to Actions -->
+            <div class="relative z-10 flex flex-wrap gap-gutter justify-center mt-4">
+                <a href="./architecture.html"
+                    class="flex items-center justify-center rounded-xl h-12 px-6 btn-gold-fill transition-all font-headline-lg text-[15px] font-bold">
+                    <span class="material-symbols-outlined mr-2">account_tree</span>
+                    View Architecture
+                </a>
+                <a href="./roadmap.html#contribution"
+                    class="flex items-center justify-center rounded-xl h-12 px-6 btn-gold-hollow transition-all font-headline-lg text-[15px] font-bold">
+                    <span class="material-symbols-outlined mr-2">terminal</span>
+                    Start Building
+                </a>
+            </div>
+        </div>
+
+        <!-- Style rules for Multi-Agent Simulation -->
+        <style>
+            @keyframes glideTx {
+                0% {
+                    cx: 40px;
+                    fill: #ddb7ff;
+                    filter: drop-shadow(0 0 4px #ddb7ff);
+                }
+
+                25% {
+                    cx: 140px;
+                    fill: #4cd7f6;
+                    filter: drop-shadow(0 0 8px #4cd7f6);
+                }
+
+                50% {
+                    cx: 240px;
+                    fill: #b4c5ff;
+                    filter: drop-shadow(0 0 10px #b4c5ff);
+                }
+
+                75% {
+                    cx: 340px;
+                    fill: #ddb7ff;
+                    filter: drop-shadow(0 0 12px #ddb7ff);
+                }
+
+                100% {
+                    cx: 440px;
+                    fill: #ffffff;
+                    filter: drop-shadow(0 0 16px #ffffff);
+                    opacity: 0;
+                }
+            }
+
+            .agent-first-section {
+                position: relative;
+                overflow: hidden;
+                padding: 2rem 0;
+                display: flex;
+                flex-direction: column;
+                gap: 3rem;
+                align-items: center;
+                text-align: center;
+                max-width: 100%;
+                width: 100%;
+                margin: 4rem auto;
+            }
+
+            .icon-list-wrapper {
+                overflow: hidden;
+                width: 100%;
+                position: relative;
+                padding: 6rem 0;
+                mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
+                -webkit-mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
+            }
+
+            .icon-list {
+                display: flex;
+                gap: 2rem;
+                width: max-content;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                animation: slideLeft 40s linear infinite;
+            }
+
+            @keyframes slideLeft {
+                0% {
+                    transform: translate3d(0, 0, 0);
+                }
+
+                100% {
+                    transform: translate3d(-50%, 0, 0);
+                }
+            }
+
+            .bouncer.symbol {
+                font-family: 'Material Symbols Outlined';
+                font-size: 2.25rem;
+                color: #b38728;
+                background: #ffffff;
+                border: 2px solid rgba(179, 135, 40, 0.2);
+                border-radius: 18px;
+                width: 5rem;
+                height: 5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                user-select: none;
+                animation: snakeWave 2.4s ease-in-out infinite alternate;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(179, 135, 40, 0.05);
+            }
+
+            @keyframes snakeWave {
+                0% {
+                    transform: translateY(35px);
+                }
+
+                100% {
+                    transform: translateY(-35px);
+                }
+            }
+
+            .icon-list li .bouncer.symbol {
+                animation-delay: calc(var(--i, 0) * -0.75s);
+            }
+
+            .agent-first-text {
+                font-size: 3.25rem;
+                line-height: 1.2;
+                font-weight: 800;
+                background: linear-gradient(135deg, #1a1a1a 0%, #b38728 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                max-width: 1100px;
+                margin: 0 auto;
+                text-align: center;
+                font-family: 'Space Grotesk', sans-serif;
+                letter-spacing: -0.03em;
+                min-height: 4rem;
+            }
+
+            @media (max-width: 768px) {
+                .agent-first-text {
+                    font-size: 2.25rem;
+                }
+            }
+
+            .blinking-cursor {
+                height: 24px;
+                animation: blinkCursor 0.8s steps(2, start) infinite;
+            }
+
+            @keyframes blinkCursor {
+                to {
+                    visibility: hidden;
+                }
+            }
+
+            /* Premium YouTube Video Section Styles */
+            .landing-video-section {
+                position: relative;
+                width: 100vw;
+                max-width: 100%;
+                margin: 5rem 0 0 0;
+                padding: 0;
+                overflow: hidden;
+            }
+
+            .video-ambient-glow {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.9);
+                width: 80%;
+                height: 80%;
+                background: radial-gradient(circle, rgba(179, 135, 40, 0.28) 0%, transparent 70%);
+                filter: blur(85px);
+                z-index: 0;
+                pointer-events: none;
+                opacity: 0.0;
+                transition: transform 0.1s ease-out, opacity 0.3s;
+            }
+
+            .video-wrapper {
+                position: relative;
+                border-radius: 24px;
+                overflow: hidden;
+                aspect-ratio: 16 / 9;
+                border: 2px solid rgba(179, 135, 40, 0.25);
+                box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 40px rgba(179, 135, 40, 0.15);
+                cursor: none;
+                /* Custom premium cursor active on hover */
+                background: #000000;
+                transition: border-color 0.4s, box-shadow 0.4s;
+                transform: scale(0.9);
+                /* Start with slightly smaller scale */
+            }
+
+            .video-wrapper:hover {
+                border-color: rgba(179, 135, 40, 0.5);
+            }
+
+            .landing-video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                opacity: 0.85;
+                transition: opacity 0.4s;
+                transform: scale(1.15);
+                /* Keep larger to prevent blank edges during vertical shift */
+                transform-origin: center center;
+            }
+
+            .video-wrapper:hover .landing-video {
+                opacity: 1;
+            }
+
+            /* Premium Custom Floating Video Cursor */
+            .custom-cursor {
+                position: absolute;
+                pointer-events: none;
+                z-index: 30;
+                mix-blend-mode: normal;
+                transition: opacity 0.3s ease, transform 0.1s ease-out;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                left: 0;
+                top: 0;
+            }
+
+            .cursor-content {
+                background: rgba(255, 255, 255, 0.98);
+                color: #000000;
+                padding: 0.75rem 1.25rem;
+                border-radius: 50px;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-weight: 800;
+                font-size: 0.85rem;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+                border: 1px solid rgba(179, 135, 40, 0.3);
+            }
+
+            .cursor-content .symbol {
+                font-family: 'Material Symbols Outlined';
+                font-size: 1.1rem;
+            }
+
+            /* Floating Play Overlay Button */
+            .video-control-button {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 20;
+                width: 80px;
+                height: 80px;
+                background: rgba(10, 10, 10, 0.75);
+                color: #ffffff;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2.2rem;
+                font-family: 'Material Symbols Outlined';
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 0px rgba(179, 135, 40, 0.4);
+                border: 2px solid #b38728;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+                animation: pulseGlow 2s infinite;
+            }
+
+            @keyframes pulseGlow {
+                0% {
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 0px rgba(179, 135, 40, 0.4);
+                }
+
+                70% {
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 15px rgba(179, 135, 40, 0);
+                }
+
+                100% {
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 0px rgba(179, 135, 40, 0);
+                }
+            }
+
+            .video-wrapper:hover .video-control-button {
+                background: #b38728;
+                color: #ffffff;
+                transform: translate(-50%, -50%) scale(1.1);
+                box-shadow: 0 15px 35px rgba(179, 135, 40, 0.4);
+                animation: none;
+            }
+
+            /* Dialog YouTube Modal */
+            .youtube-dialog {
+                border: none;
+                background: transparent;
+                padding: 0;
+                margin: 0;
+                position: fixed;
+                inset: 0;
+                width: 100vw;
+                height: 100vh;
+                max-width: 100%;
+                max-height: 100%;
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.4s ease;
+            }
+
+            .youtube-dialog[open] {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .dialog-backdrop {
+                position: absolute;
+                inset: 0;
+                background: rgba(10, 10, 10, 0.85);
+                backdrop-filter: blur(12px);
+                z-index: 1;
+            }
+
+            .dialog-inner {
+                position: relative;
+                z-index: 2;
+                width: 75vw;
+                max-width: 75vw;
+                aspect-ratio: 16 / 9;
+                border-radius: 20px;
+                overflow: hidden;
+                background: #000;
+                border: 2px solid rgba(179, 135, 40, 0.35);
+                box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8);
+                transform: scale(0.95);
+                transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            }
+
+            .youtube-dialog[open] .dialog-inner {
+                transform: scale(1);
+            }
+
+            .dialog-content {
+                width: 100%;
+                height: 100%;
+                position: relative;
+            }
+
+            .dialog-close-button {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                z-index: 10;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                color: #ffffff;
+                width: 44px;
+                height: 44px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.25rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                backdrop-filter: blur(8px);
+            }
+
+            .dialog-close-button:hover {
+                background: #ffffff;
+                color: #000000;
+                transform: scale(1.1) rotate(90deg);
+            }
+
+            .dialog-body {
+                width: 100%;
+                height: 100%;
+            }
+
+            .dialog-body iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+            /* High-Fidelity Premium Footer Styles with White BG */
+            .footer {
+                background: #ffffff;
+                padding: 6rem 0 4rem 0;
+                color: #4b5563;
+                font-family: 'Inter', sans-serif;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .footer-main-content {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                position: relative;
+                z-index: 10;
+            }
+
+            .footer-inner {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 3rem;
+                margin-bottom: 0.2rem;
+            }
+
+            .footer-title {
+                font-size: 2.25rem;
+                font-weight: 800;
+                color: #111827;
+                letter-spacing: -0.03em;
+                background: linear-gradient(135deg, #111827 30%, #b38728 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .footer-nav-section {
+                display: flex;
+                flex-direction: column;
+                gap: 0.85rem;
+            }
+
+            .footer-nav-section a {
+                color: #4b5563;
+                text-decoration: none;
+                font-size: 0.95rem;
+                font-weight: 600;
+                transition: color 0.3s ease, transform 0.2s ease;
+                display: inline-block;
+            }
+
+            .footer-nav-section a:hover {
+                color: #b38728;
+                transform: translateX(4px);
+            }
+
+            .footer-img-container {
+                width: 100%;
+                max-width: 1200px;
+                margin: -4rem auto 0 auto;
+                padding: 0 2rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                pointer-events: none;
+            }
+
+            .footer-vagechain {
+                font-family: 'Poppins', sans-serif;
+                font-size: 16rem;
+                font-weight: 500;
+                letter-spacing: -0.1em;
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.08em;
+                user-select: none;
+                pointer-events: none;
+                width: 100%;
+                padding: 0;
+            }
+
+            .footer-vagechain span {
+                color: #000000;
+                display: inline-block;
+            }
+
+            @media (max-width: 768px) {
+                .footer-vagechain {
+                    font-size: 4rem;
+                }
+            }
+        </style> <!-- SECTION 2: DECENTRALIZED MULTI-AGENT SIMULATION -->
+        <section class="relative z-10 w-full max-w-container-max mx-auto px-margin flex flex-col gap-12 mt-40">
+            <div class="flex flex-col gap-4 text-center max-w-4xl mx-auto">
+                <span
+                    class="label-caps-text text-[#0053db] text-xs tracking-widest uppercase font-bold font-data-mono bg-[#0053db]/10 px-3 py-1 rounded-full w-max mx-auto">Active
+                    Ecosystem Simulation</span>
+                <h2
+                    class="text-4xl md:text-5xl lg:text-6xl text-on-surface font-extrabold font-headline-xl tracking-tight leading-tight">
+                    Decentralized Multi-Agent Simulation</h2>
+                <p class="text-lg md:text-xl text-on-surface-variant font-body-lg max-w-2xl mx-auto leading-relaxed">
+                    Observe the real-time collaboration of independent decentralized nodes working in VageChain's
+                    commit-reveal architecture. Click any card to explore its core design and telemetry.
+                </p>
+            </div>
+
+            <!-- Agent Interactive Avatars Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 w-full max-w-6xl mx-auto mt-4">
+                <!-- User Agent Card -->
+                <div class="agent-avatar-card glass-panel p-6 rounded-2xl border-2 border-outline-variant/30 flex flex-col justify-between gap-4 cursor-pointer hover:border-amber-500/60 hover:shadow-2xl hover:scale-105 transition-all duration-300 select-none text-center items-center relative"
+                    data-agent="user">
+
+
+                    <div class="flex flex-col items-center gap-3 mt-2">
+                        <div
+                            class="size-16 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 text-primary drop-shadow-[0_0_12px_rgba(221,183,255,0.4)] transition-transform duration-500 hover:rotate-12">
+                            <span class="material-symbols-outlined text-3xl">account_circle</span>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-on-surface text-lg font-headline-lg">User Agent</h3>
+                            <span
+                                class="text-xs font-bold font-data-mono text-primary uppercase tracking-wider">Transaction
+                                Sender</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant leading-relaxed font-semibold">Submits encrypted
+                            transaction intents directly as zero-knowledge commits.</p>
+                    </div>
+
+                    <div
+                        class="mt-2 flex items-center gap-1.5 text-xs font-extrabold text-primary hover:text-primary-fixed transition-colors">
+                        <span>Explore Architecture</span>
+                        <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                    </div>
+                </div>
+
+                <!-- Validator Agent Card -->
+                <div class="agent-avatar-card glass-panel p-6 rounded-2xl border-2 border-outline-variant/30 flex flex-col justify-between gap-4 cursor-pointer hover:border-amber-500/60 hover:shadow-2xl hover:scale-105 transition-all duration-300 select-none text-center items-center relative"
+                    data-agent="validator">
+
+                    <div class="flex flex-col items-center gap-3 mt-2">
+                        <div
+                            class="size-16 rounded-full bg-tertiary/10 flex items-center justify-center border border-tertiary/20 text-tertiary drop-shadow-[0_0_12px_rgba(76,215,246,0.4)] transition-transform duration-500 hover:rotate-12">
+                            <span class="material-symbols-outlined text-3xl">shield_person</span>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-on-surface text-lg font-headline-lg">Validator Node</h3>
+                            <span
+                                class="text-xs font-bold font-data-mono text-tertiary uppercase tracking-wider">Consensus
+                                Node</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant leading-relaxed font-semibold">Executes dynamic
+                            consensus rounds to guarantee fair transaction execution.</p>
+                    </div>
+
+                    <div
+                        class="mt-2 flex items-center gap-1.5 text-xs font-extrabold text-tertiary hover:text-tertiary-fixed transition-colors">
+                        <span>Explore Architecture</span>
+                        <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                    </div>
+                </div>
+
+                <!-- Execution Engine Agent Card -->
+                <div class="agent-avatar-card glass-panel p-6 rounded-2xl border-2 border-outline-variant/30 flex flex-col justify-between gap-4 cursor-pointer hover:border-amber-500/60 hover:shadow-2xl hover:scale-105 transition-all duration-300 select-none text-center items-center relative"
+                    data-agent="execution">
+
+
+                    <div class="flex flex-col items-center gap-3 mt-2">
+                        <div
+                            class="size-16 rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 text-secondary drop-shadow-[0_0_12px_rgba(180,197,255,0.4)] transition-transform duration-500 hover:rotate-12">
+                            <span class="material-symbols-outlined text-3xl">bolt</span>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-on-surface text-lg font-headline-lg">Execution Engine</h3>
+                            <span
+                                class="text-xs font-bold font-data-mono text-secondary uppercase tracking-wider">Parallel
+                                OCC System</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant leading-relaxed font-semibold">Leverages
+                            multi-threaded processing to execute tasks simultaneously.</p>
+                    </div>
+
+                    <div
+                        class="mt-2 flex items-center gap-1.5 text-xs font-extrabold text-secondary hover:text-secondary-fixed transition-colors">
+                        <span>Explore Architecture</span>
+                        <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                    </div>
+                </div>
+
+                <!-- State Keeper Agent Card -->
+                <div class="agent-avatar-card glass-panel p-6 rounded-2xl border-2 border-outline-variant/30 flex flex-col justify-between gap-4 cursor-pointer hover:border-amber-500/60 hover:shadow-2xl hover:scale-105 transition-all duration-300 select-none text-center items-center relative"
+                    data-agent="statekeeper">
+
+
+                    <div class="flex flex-col items-center gap-3 mt-2">
+                        <div
+                            class="size-16 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 text-primary drop-shadow-[0_0_12px_rgba(221,183,255,0.4)] transition-transform duration-500 hover:rotate-12">
+                            <span class="material-symbols-outlined text-3xl">park</span>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-on-surface text-lg font-headline-lg">State Keeper</h3>
+                            <span class="text-xs font-bold font-data-mono text-primary uppercase tracking-wider">Verkle
+                                Tree System</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant leading-relaxed font-semibold">Generates ultra-compact
+                            cryptographic state and stateless proofs.</p>
+                    </div>
+
+                    <div
+                        class="mt-2 flex items-center gap-1.5 text-xs font-extrabold text-primary hover:text-primary-fixed transition-colors">
+                        <span>Explore Architecture</span>
+                        <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                    </div>
+                </div>
+
+                <!-- Network Intelligence Agent Card -->
+                <div class="agent-avatar-card glass-panel p-6 rounded-2xl border-2 border-outline-variant/30 flex flex-col justify-between gap-4 cursor-pointer hover:border-amber-500/60 hover:shadow-2xl hover:scale-105 transition-all duration-300 select-none text-center items-center relative"
+                    data-agent="core">
+
+
+                    <div class="flex flex-col items-center gap-3 mt-2">
+                        <div
+                            class="size-16 rounded-full bg-tertiary/10 flex items-center justify-center border border-tertiary/20 text-tertiary drop-shadow-[0_0_12px_rgba(76,215,246,0.4)] transition-transform duration-500 hover:rotate-12">
+                            <span class="material-symbols-outlined text-3xl">psychology</span>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-on-surface text-lg font-headline-lg">Network Intel</h3>
+                            <span
+                                class="text-xs font-bold font-data-mono text-tertiary uppercase tracking-wider">VageChain
+                                Core</span>
+                        </div>
+                        <p class="text-sm text-on-surface-variant leading-relaxed font-semibold">Coordinates parallel
+                            queues and handles optimal execution scheduling.</p>
+                    </div>
+
+                    <div
+                        class="mt-2 flex items-center gap-1.5 text-xs font-extrabold text-tertiary hover:text-tertiary-fixed transition-colors">
+                        <span>Explore Architecture</span>
+                        <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VAGECHAIN AGENT FIRST LANDING COMPONENT -->
+        <landing-agent-first class="block w-full mt-16">
+            <section class="agent-first-section">
+                <div class="icon-list-wrapper">
+                    <ul class="icon-list">
+                        <li class="grid-col">
+                            <div class="bouncer symbol">toll</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">database</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">shield_lock</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">account_balance_wallet</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">hub</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">bolt</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">psychology</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">key</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">link</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">currency_exchange</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">query_stats</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">lock</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">dynamic_feed</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">donut_large</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">security</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">lan</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">speed</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">token</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">api</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">memory</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">grain</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">groups</div>
+                        </li>
+                        <!-- Duplicate for seamless loop marquee -->
+                        <li class="grid-col">
+                            <div class="bouncer symbol">toll</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">database</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">shield_lock</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">account_balance_wallet</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">hub</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">bolt</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">psychology</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">key</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">link</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">currency_exchange</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">query_stats</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">lock</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">dynamic_feed</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">donut_large</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">security</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">lan</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">speed</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">token</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">api</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">memory</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">grain</div>
+                        </li>
+                        <li class="grid-col">
+                            <div class="bouncer symbol">groups</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="grid-container text-container">
+                    <div class="grid-row">
+                        <div class="grid-col col-xs-4 col-sm-8 col-md-9 flex items-center justify-center gap-3">
+                            <h2 class="agent-first-text">
+                                <span id="typed-agent-content"></span><span class="text-[#b38728] animate-blink ml-1"
+                                    id="typing-agent-cursor">|</span>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </landing-agent-first>
+        <!-- SECTION 3: YOUTUBE EXPLAINER VIDEO SECTION -->
+        <youtube-video-section _ngcontent-ng-c2459570876="" _nghost-ng-c2977624880="">
+            <section _ngcontent-ng-c2977624880="" class="landing-video-section" style="transform: translate(0px, 0px);">
+                <div class="video-ambient-glow" id="video-ambient-glow"></div>
+                <modal-youtube _ngcontent-ng-c2977624880="" _nghost-ng-c2744779332="">
+                    <dialog _ngcontent-ng-c2744779332="" data-dialog="gemini-video" class="dialog youtube-dialog"
+                        id="youtube-dialog">
+                        <div _ngcontent-ng-c2744779332="" class="dialog-backdrop" id="youtube-backdrop"></div>
+                        <div _ngcontent-ng-c2744779332="" class="dialog-inner">
+                            <div _ngcontent-ng-c2744779332="" class="dialog-content">
+                                <button _ngcontent-ng-c2744779332="" class="dialog-close-button symbol"
+                                    id="youtube-close">
+                                    <span _ngcontent-ng-c2744779332="" class="material-symbols-outlined">close</span>
+                                </button>
+                                <div _ngcontent-ng-c2744779332="" class="dialog-body" id="youtube-body"></div>
+                            </div>
+                        </div>
+                    </dialog>
+                </modal-youtube>
+                <div _ngcontent-ng-c2977624880="" aria-label="Play video" class="video-wrapper" id="youtube-trigger">
+                    <div _ngcontent-ng-c2977624880="" class="custom-cursor" id="video-custom-cursor"
+                        style="opacity: 0;">
+                        <div _ngcontent-ng-c2977624880="" class="cursor-content">
+                            <span _ngcontent-ng-c2977624880="" class="symbol">play_arrow</span>
+                            <span _ngcontent-ng-c2977624880="" class="call-to-action">Play intro</span>
+                        </div>
+                    </div>
+                    <div _ngcontent-ng-c2977624880="" class="video-control-button symbol"> play_arrow </div>
+                    <video _ngcontent-ng-c2977624880="" autoplay="" loop="" muted="" playsinline="" width="1920"
+                        height="1080" class="landing-video">
+                        <source _ngcontent-ng-c2977624880="" src="/assets/video/hero_video.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </section>
+        </youtube-video-section>
+
+    </main>
+
+    <app-footer _nghost-ng-c1232209807="">
+        <footer _ngcontent-ng-c1232209807="" class="footer">
+            <div _ngcontent-ng-c1232209807="" class="footer-main-content">
+                <div _ngcontent-ng-c1232209807="" class="grid-container">
+                    <div _ngcontent-ng-c1232209807="" class="grid-row footer-inner">
+                        <div _ngcontent-ng-c1232209807="" class="grid-col col-xs-4 col-sm-8 col-md-4">
+                            <p _ngcontent-ng-c1232209807="" class="footer-title heading-5">Built for Fairness and
+                                Progress</p>
+                        </div>
+                        <div _ngcontent-ng-c1232209807="" class="grid-col col-xs-4 col-sm-4 col-md-3 col-md-offset-2">
+                            <div _ngcontent-ng-c1232209807="" class="footer-nav-section"><a _ngcontent-ng-c1232209807=""
+                                    class="call-to-action call-to-action--nav" href="./index.html"> VageChain Core </a><a
+                                    _ngcontent-ng-c1232209807="" class="call-to-action call-to-action--nav"
+                                    href="https://github.com/VageChain" target="_blank"> Block Explorer </a><a _ngcontent-ng-c1232209807=""
+                                    class="call-to-action call-to-action--nav" href="./architecture.html"> Dev Docs </a><!---->
+                            </div>
+                        </div>
+                        <div _ngcontent-ng-c1232209807="" class="grid-col col-xs-4 col-sm-4 col-md-3">
+                            <div _ngcontent-ng-c1232209807="" class="footer-nav-section"><a _ngcontent-ng-c1232209807=""
+                                    class="call-to-action call-to-action--nav" href="./whitepaper.pdf" target="_blank"> Whitepaper </a><a
+                                    _ngcontent-ng-c1232209807="" class="call-to-action call-to-action--nav"
+                                    href="./roadmap.html"> Vision & Roadmap </a><a _ngcontent-ng-c1232209807=""
+                                    class="call-to-action call-to-action--nav" href="https://github.com/VageChain" target="_blank"> Community Hub
+                                </a><!----></div>
+                        </div><!---->
+                    </div>
+                </div>
+            </div>
+            <div _ngcontent-ng-c1232209807="" class="footer-img-container">
+                <div _ngcontent-ng-c1232209807="" class="grid-container">
+                    <div class="footer-vagechain">
+                        <span>V</span><span>a</span><span>g</span><span>e</span><span>&nbsp;</span><span>C</span><span>h</span><span>a</span><span>i</span><span>n</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </app-footer>
+
+    <!-- POPUP MODAL WINDOW WITH METALLIC SHINE BORDER -->
+    <div id="agent-modal"
+        class="fixed inset-0 z-[9999] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <!-- Backdrop with premium blur -->
+        <div class="absolute inset-0 bg-neutral-950/60 backdrop-blur-md" id="agent-modal-close-bg"></div>
+
+        <!-- Modal content with gold/silver shimmering border and glassmorphism -->
+        <div class="relative z-10 w-full max-w-lg bg-surface/90 border border-outline-variant/30 rounded-2xl p-8 shadow-2xl transition-all duration-300 scale-95 flex flex-col gap-6"
+            style="background: rgba(255, 255, 255, 0.98); border: 3px solid #b38728; box-shadow: 0 0 35px rgba(179, 135, 40, 0.35);">
+            <!-- Close Button -->
+            <button class="absolute top-4 right-4 text-neutral-500 hover:text-neutral-950 transition-colors"
+                id="agent-modal-close-btn">
+                <span class="material-symbols-outlined text-2xl font-bold">close</span>
+            </button>
+
+            <!-- Header -->
+            <div class="flex items-center gap-4">
+                <div id="modal-agent-icon"
+                    class="size-16 rounded-full flex items-center justify-center text-3xl border"></div>
+                <div class="text-left">
+                    <h3 id="modal-agent-name" class="text-2xl font-extrabold text-on-surface"></h3>
+                    <span id="modal-agent-role"
+                        class="text-xs font-extrabold font-data-mono uppercase tracking-wider"></span>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="h-[1px] w-full bg-outline-variant/50"></div>
+
+            <!-- Detailed Content -->
+            <div class="flex flex-col gap-4 text-left">
+                <h4 class="text-xs font-extrabold text-[#b38728] uppercase tracking-widest font-data-mono">How
+                    it Works</h4>
+                <p id="modal-agent-details" class="text-sm text-on-surface-variant leading-relaxed font-semibold"></p>
+
+                <h4 class="text-xs font-extrabold text-[#b38728] uppercase tracking-widest font-data-mono">
+                    Advanced Tech Specifications</h4>
+                <ul id="modal-agent-specs"
+                    class="list-disc pl-5 text-sm text-on-surface-variant leading-relaxed font-semibold flex flex-col gap-2">
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+            (function () {
+                // Interactive Advanced 3D Particle Logo Engine (Three.js)
+                const canvas = document.getElementById('chain-canvas');
+                if (canvas && typeof THREE !== 'undefined') {
+                    let scene = new THREE.Scene();
+                    const parent = canvas.parentElement;
+                    let camera = new THREE.PerspectiveCamera(45, parent.offsetWidth / parent.offsetHeight, 1, 2000);
+                    camera.position.z = 320; // Optimized to view giant Logo
+
+                    let renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+                    const resize = () => {
+                        const w = parent.offsetWidth;
+                        const h = parent.offsetHeight;
+                        renderer.setSize(w, h, false);
+                        camera.aspect = w / h;
+                        camera.updateProjectionMatrix();
+                    };
+
+                    // --- ADVANCED METALLIC LIGHTING SYSTEM ---
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+                    scene.add(ambientLight);
+
+                    const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+                    dirLight.position.set(50, 150, 100);
+                    scene.add(dirLight);
+
+                    // Orbiting point lights create dynamic metallic specular glints in Light Blue
+                    const lightLeft = new THREE.PointLight(0x00F2FE, 2.5, 600);
+                    scene.add(lightLeft);
+
+                    const lightRight = new THREE.PointLight(0x4FACFE, 2.5, 600);
+                    scene.add(lightRight);
+
+                    // --- GEOMETRIC CONSTRUCTION MATRIX ---
+                    const masterGroup = new THREE.Group();
+                    masterGroup.position.set(0, 0, 0); // Keep the hero cube cluster centered behind the headline
+                    scene.add(masterGroup);
+
+                    function createMetallicCube(size, colorHex, edgeColorHex) {
+                        const cubeGroup = new THREE.Group();
+
+                        const geom = new THREE.BoxGeometry(size, size, size);
+
+                        // Radiant Ethereal Glass Material (No Dark Metal)
+                        const mat = new THREE.MeshStandardMaterial({
+                            color: new THREE.Color(colorHex),
+                            metalness: 0.6,
+                            roughness: 0.3,
+                            transparent: true,
+                            opacity: 1,
+                            flatShading: false,
+                            emissive: new THREE.Color('#81d4fa'),
+                            emissiveIntensity: 0.6
+                        });
+
+                        const mesh = new THREE.Mesh(geom, mat);
+                        cubeGroup.add(mesh);
+
+                        // Ultra Brilliant Pure White Edge Glowing Logic
+                        const edgesGeom = new THREE.EdgesGeometry(geom);
+                        const edgeMat = new THREE.LineBasicMaterial({
+                            color: new THREE.Color('#ffffff'),
+                            transparent: true,
+                            opacity: 1.0,
+                            linewidth: 2
+                        });
+                        const edgeLines = new THREE.LineSegments(edgesGeom, edgeMat);
+                        cubeGroup.add(edgeLines);
+
+                        return { group: cubeGroup, mesh: mesh };
+                    }
+
+                    // Construct the 3 Primary Vectors in Inverted Triangle arrangement
+                    const spacing = 75;
+                    const cubeSize = 42;
+
+                    // Super-Light Ethereal Cyan-Blue palette
+                    const cubeLeft = createMetallicCube(cubeSize, '#e1f5fe', '#ffffff'); // Top Left
+                    cubeLeft.group.position.set(-spacing, spacing, 0);
+
+                    const cubeRight = createMetallicCube(cubeSize, '#b3e5fc', '#ffffff'); // Top Right
+                    cubeRight.group.position.set(spacing, spacing, 0);
+
+                    const cubeBottom = createMetallicCube(cubeSize, '#81d4fa', '#ffffff');   // Bottom Center
+                    cubeBottom.group.position.set(0, -spacing, 0);
+
+                    masterGroup.add(cubeLeft.group);
+                    masterGroup.add(cubeRight.group);
+                    masterGroup.add(cubeBottom.group);
+
+                    // --- INTER-NODE STRUCTURAL CONDUITS (GLOWING LIGHT LINKS) ---
+                    const connectorMat = new THREE.MeshStandardMaterial({
+                        color: 0xe1f5fe, // Soft Cyan Base
+                        metalness: 0.1,
+                        roughness: 0.1,
+                        transparent: true,
+                        opacity: 0.6,
+                        emissive: 0x81d4fa,
+                        emissiveIntensity: 0.7
+                    });
+
+                    function generateLink(nodeA, nodeB) {
+                        const start = nodeA.group.position;
+                        const end = nodeB.group.position;
+                        const distance = start.distanceTo(end);
+
+                        const cylinder = new THREE.CylinderGeometry(3, 3, distance, 16);
+                        const mesh = new THREE.Mesh(cylinder, connectorMat);
+
+                        const midpoint = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
+                        mesh.position.copy(midpoint);
+
+                        const axis = new THREE.Vector3(0, 1, 0);
+                        mesh.quaternion.setFromUnitVectors(axis, new THREE.Vector3().subVectors(end, start).normalize());
+
+                        masterGroup.add(mesh);
+                    }
+
+                    generateLink(cubeLeft, cubeRight); // Top Link
+                    generateLink(cubeRight, cubeBottom);   // Right Descent
+                    generateLink(cubeBottom, cubeLeft);   // Left Descent
+
+                    // --- MOUSE INTERACTION PLANE ---
+                    const mouse = new THREE.Vector2(0, 0);
+                    window.addEventListener('mousemove', (e) => {
+                        const r = canvas.getBoundingClientRect();
+                        mouse.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+                        mouse.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+                    });
+
+                    window.addEventListener('resize', resize);
+                    resize();
+
+                    // --- RENDERING & DYNAMICS CORE ---
+                    const clock = new THREE.Clock();
+
+                    function renderingCycle() {
+                        requestAnimationFrame(renderingCycle);
+                        const elapsed = clock.getElapsedTime();
+
+                        // 1. Primary Rotation Orchestration (Asynchronous per node)
+                        cubeLeft.group.rotation.x = elapsed * 0.35;
+                        cubeLeft.group.rotation.y = elapsed * 0.48;
+
+                        cubeRight.group.rotation.x = elapsed * 0.42 + 1;
+                        cubeRight.group.rotation.y = elapsed * 0.31 + 1;
+
+                        cubeBottom.group.rotation.x = elapsed * 0.55 + 2;
+                        cubeBottom.group.rotation.y = elapsed * 0.29 + 2;
+
+                        // 2. Global Hover Matrix & Fluid Dynamics
+                        masterGroup.position.y = Math.sin(elapsed * 0.6) * 12;
+
+                        // 3. Smooth Mouse-Follow Kinematics
+                        masterGroup.rotation.y += (mouse.x * 0.15 - masterGroup.rotation.y) * 0.05;
+                        masterGroup.rotation.x += (-mouse.y * 0.15 - masterGroup.rotation.x) * 0.05;
+
+                        // 4. Orbital Specular Light Kinematics
+                        lightLeft.position.x = Math.cos(elapsed * 0.8) * 250;
+                        lightLeft.position.y = Math.sin(elapsed * 0.8) * 250;
+                        lightLeft.position.z = 150;
+
+                        lightRight.position.x = Math.sin(elapsed * 1.1) * -200;
+                        lightRight.position.y = Math.cos(elapsed * 1.1) * 200;
+                        lightRight.position.z = 120;
+
+                        renderer.render(scene, camera);
+                    }
+                    renderingCycle();
+                }
+
+                // Multi-Agent Simulation Popups Data & Logic
+                const agentDetails = {
+                    user: {
+                        name: "User Agent",
+                        role: "Transaction Sender",
+                        icon: "account_circle",
+                        iconClass: "text-primary border-primary/20 bg-primary/10",
+                        details: "The User Agent represents the entry point of transactions on VageChain. Unlike traditional Layer 1s where your transactions are vulnerable in a public mempool, VageChain secures your inputs immediately.",
+                        specs: [
+                            "Encrypted Commit-Reveal: Shields transaction details locally before broadcast.",
+                            "Complete MEV Immunity: Prevents front-running and sandwich attacks before validation.",
+                            "Generates snappy local intent proofs in under 45ms."
+                        ]
+                    },
+                    validator: {
+                        name: "Validator Node",
+                        role: "Consensus Node",
+                        icon: "shield_person",
+                        iconClass: "text-tertiary border-tertiary/20 bg-tertiary/10",
+                        details: "Validator Nodes maintain the state of VageChain by validating blocks through the ultra-fast linear HotStuff consensus mechanism.",
+                        specs: [
+                            "Linear HotStuff Consensus: Optimized round times finalize transactions in under 1.2s.",
+                            "Sub-linear validation overhead: Scales seamlessly to thousands of online validators.",
+                            "Dynamic peer-to-peer telemetry sync ensures minimal state bloat."
+                        ]
+                    },
+                    execution: {
+                        name: "Execution Engine",
+                        role: "Parallel OCC System",
+                        icon: "bolt",
+                        iconClass: "text-secondary border-secondary/20 bg-secondary/10",
+                        details: "VageChain's Execution Engine handles massive transaction flows through multi-threaded Optimistic Concurrency Control (OCC).",
+                        specs: [
+                            "True Parallel Execution: Evaluates non-conflicting state changes simultaneously.",
+                            "Dynamic Conflict Resolution: Detects overlapping state access in real-time, falling back gracefully.",
+                            "Sustained performance surpassing 4,200+ Transactions Per Second (TPS)."
+                        ]
+                    },
+                    statekeeper: {
+                        name: "State Keeper",
+                        role: "Verkle Tree System",
+                        icon: "park",
+                        iconClass: "text-primary border-primary/20 bg-primary/10",
+                        details: "The State Keeper uses high-performance Verkle Trees to securely store state and provide compact stateless verification proofs.",
+                        specs: [
+                            "Verkle Tree Roots: Requires 90% less cryptographic size than traditional Merkle trees.",
+                            "Stateless Clients: Allows light nodes to verify state changes without downloading blockchain history.",
+                            "Sub-millisecond verification times for transaction state updates."
+                        ]
+                    },
+                    core: {
+                        name: "Network Intel",
+                        role: "VageChain Core",
+                        icon: "psychology",
+                        iconClass: "text-tertiary border-tertiary/20 bg-tertiary/10",
+                        details: "Network Intel is the brain of VageChain, dynamically scheduling transactions, allocating resources, and regulating bandwidth.",
+                        specs: [
+                            "Self-Optimizing Gas Schedules: Adjusts transaction fees automatically based on complexity.",
+                            "Decentralized telemetry monitoring for active validator sets.",
+                            "Guarantees zero-MEV ordering and fair transaction execution."
+                        ]
+                    }
+                };
+
+                const modal = document.getElementById('agent-modal');
+                const modalCloseBtn = document.getElementById('agent-modal-close-btn');
+                const modalCloseBg = document.getElementById('agent-modal-close-bg');
+                const modalIcon = document.getElementById('modal-agent-icon');
+                const modalName = document.getElementById('modal-agent-name');
+                const modalRole = document.getElementById('modal-agent-role');
+                const modalDetails = document.getElementById('modal-agent-details');
+                const modalSpecs = document.getElementById('modal-agent-specs');
+
+                // Typing Engine for Modal Popup
+                let currentTypingIntervals = [];
+
+                function clearAllModalTyping() {
+                    currentTypingIntervals.forEach(interval => clearInterval(interval));
+                    currentTypingIntervals = [];
+                }
+
+                function typeText(element, text, speed = 12, onComplete = null) {
+                    element.textContent = '';
+                    let index = 0;
+                    const interval = setInterval(() => {
+                        if (index < text.length) {
+                            element.textContent += text.charAt(index);
+                            index++;
+                        } else {
+                            clearInterval(interval);
+                            if (onComplete) onComplete();
+                        }
+                    }, speed);
+                    currentTypingIntervals.push(interval);
+                }
+
+                document.querySelectorAll('.agent-avatar-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const agentKey = card.getAttribute('data-agent');
+                        const data = agentDetails[agentKey];
+                        if (data && modal) {
+                            clearAllModalTyping();
+
+                            modalIcon.innerHTML = `<span class="material-symbols-outlined text-4xl">${data.icon}</span>`;
+                            modalIcon.className = `size-20 rounded-full flex items-center justify-center border-2 ${data.iconClass}`;
+
+                            // Trigger sequential typing for premium look
+                            modalName.textContent = '';
+                            modalRole.textContent = '';
+                            modalDetails.textContent = '';
+                            modalSpecs.innerHTML = '';
+
+                            typeText(modalName, data.name, 25, () => {
+                                typeText(modalRole, data.role, 15, () => {
+                                    typeText(modalDetails, data.details, 10, () => {
+                                        // Dynamically type out spec list items
+                                        let specIdx = 0;
+                                        function typeNextSpec() {
+                                            if (specIdx < data.specs.length) {
+                                                const li = document.createElement('li');
+                                                modalSpecs.appendChild(li);
+                                                typeText(li, data.specs[specIdx], 10, () => {
+                                                    specIdx++;
+                                                    typeNextSpec();
+                                                });
+                                            }
+                                        }
+                                        typeNextSpec();
+                                    });
+                                });
+                            });
+
+                            // Open Modal with high-end animations & prevent background scrolling
+                            modal.classList.remove('opacity-0', 'pointer-events-none');
+                            document.body.style.overflow = 'hidden';
+                            const innerContent = modal.querySelector('.relative');
+                            if (innerContent) {
+                                innerContent.classList.remove('scale-95');
+                                // Reset initial transformation
+                                innerContent.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+                            }
+                        }
+                    });
+                });
+
+                function closeModal() {
+                    if (modal) {
+                        modal.classList.add('opacity-0', 'pointer-events-none');
+                        document.body.style.overflow = '';
+                        clearAllModalTyping();
+                        const innerContent = modal.querySelector('.relative');
+                        if (innerContent) {
+                            innerContent.classList.add('scale-95');
+                            innerContent.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(0.95)';
+                        }
+                    }
+                }
+
+                if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+                if (modalCloseBg) modalCloseBg.addEventListener('click', closeModal);
+
+                // 3D Parallax Tilt Effect on Modal Box
+                const modalBox = modal ? modal.querySelector('.relative') : null;
+                if (modalBox) {
+                    modalBox.addEventListener('mousemove', (e) => {
+                        const rect = modalBox.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        const rotateX = -(y / rect.height) * 12; // Max 12 degree tilt
+                        const rotateY = (x / rect.width) * 12;
+                        modalBox.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+                        modalBox.style.transition = 'none';
+                    });
+
+                    modalBox.addEventListener('mouseleave', () => {
+                        modalBox.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+                        modalBox.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                    });
+                }
+
+                // Premium custom cursor and modal trigger for YouTube Explainer Video
+                const ytDialog = document.getElementById('youtube-dialog');
+                const ytTrigger = document.getElementById('youtube-trigger');
+                const ytClose = document.getElementById('youtube-close');
+                const ytBackdrop = document.getElementById('youtube-backdrop');
+                const ytBody = document.getElementById('youtube-body');
+                const customCursor = document.getElementById('video-custom-cursor');
+
+                if (ytTrigger && customCursor) {
+                    ytTrigger.addEventListener('mousemove', (e) => {
+                        const rect = ytTrigger.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        customCursor.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+                        customCursor.style.opacity = '1';
+                    });
+
+                    ytTrigger.addEventListener('mouseleave', () => {
+                        customCursor.style.opacity = '0';
+                    });
+                }
+
+                if (ytDialog && ytTrigger && ytBody) {
+                    ytTrigger.addEventListener('click', () => {
+                        ytBody.innerHTML = `<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                        ytDialog.showModal();
+                        ytDialog.style.display = 'flex';
+                    });
+
+                    const closeYT = () => {
+                        ytDialog.close();
+                        ytDialog.style.display = 'none';
+                        ytBody.innerHTML = '';
+                    };
+
+                    if (ytClose) ytClose.addEventListener('click', closeYT);
+                    if (ytBackdrop) ytBackdrop.addEventListener('click', closeYT);
+                }
+
+                // Parallax scaling effect on scroll for YouTube Video wrapper
+                const videoSection = document.querySelector('.landing-video-section');
+                const videoWrapper = document.getElementById('youtube-trigger');
+                const ambientGlow = document.getElementById('video-ambient-glow');
+                if (videoSection && videoWrapper) {
+                    const videoEl = videoWrapper.querySelector('.landing-video');
+                    window.addEventListener('scroll', () => {
+                        requestAnimationFrame(() => {
+                            const rect = videoSection.getBoundingClientRect();
+                            const viewHeight = window.innerHeight;
+                            const elementTop = rect.top;
+                            const elementHeight = rect.height;
+
+                            // Enter from bottom of viewport (progress = 0) to leaving top of viewport (progress = 1)
+                            const start = viewHeight;
+                            const end = -elementHeight;
+
+                            let progress = (start - elementTop) / (start - end);
+                            progress = Math.max(0, Math.min(1, progress));
+
+                            // Expand scale smoothly as it scrolls into full view (0.70 -> 1.00)
+                            const scale = 0.70 + (progress * 0.30);
+                            videoWrapper.style.transform = `scale(${scale})`;
+
+                            // Update dynamic glowing auric ambient backlight
+                            if (ambientGlow) {
+                                ambientGlow.style.transform = `translate(-50%, -50%) scale(${scale * 1.15})`;
+                                // Glow gets stronger when centered in viewport (sinusoidal peak)
+                                const glowOpacity = Math.sin(progress * Math.PI) * 0.95;
+                                ambientGlow.style.opacity = glowOpacity;
+                            }
+
+                            // Smooth vertical translation shift inside the wrapper for three-dimensional parallax depth
+                            if (videoEl) {
+                                const translateY = (progress - 0.5) * -45; // Max 45px displacement
+                                videoEl.style.transform = `scale(1.15) translateY(${translateY}px)`;
+                            }
+                        });
+                    });
+                }
+
+                // Initialize bouncer marquee wave animation indices sequentially
+                document.querySelectorAll('.icon-list li').forEach((li, idx) => {
+                    li.style.setProperty('--i', idx);
+                });
+
+                // Typing Animation Logic
+                const textToType = "VageChain — Fair Execution. High Performance. Built for Developers.";
+                const typedHeading = document.getElementById('typed-heading');
+                let typingIndex = 0;
+
+                function typeNextChar() {
+                    if (typedHeading && typingIndex < textToType.length) {
+                        typedHeading.textContent += textToType.charAt(typingIndex);
+                        typingIndex++;
+                        setTimeout(typeNextChar, 55); // Premium snappy typing speed
+                    }
+                }
+                // Trigger typing effect shortly after page loads
+                setTimeout(typeNextChar, 300);
+
+                // NEW: Multi-Line Cycling Typing Animation for Agent Landing derived from Source Text
+                const agentPhrases = [
+                    "The First Fully MEV-Resistant Parallel EVM Layer 1.",
+                    "Engineered to ensure predatory frontrunning is completely impossible.",
+                    "Delivering sub-second finality without sacrificing EVM compatibility."
+                ];
+                const agentContentEl = document.getElementById('typed-agent-content');
+                let currentPhraseIndex = 0;
+                let currentCharIndex = 0;
+                let isDeleting = false;
+                let hasAgentStarted = false;
+
+                function typeAgentSequence() {
+                    if (!agentContentEl) return;
+
+                    const fullTxt = agentPhrases[currentPhraseIndex];
+                    if (isDeleting) {
+                        agentContentEl.textContent = fullTxt.substring(0, currentCharIndex - 1);
+                        currentCharIndex--;
+                    } else {
+                        agentContentEl.textContent = fullTxt.substring(0, currentCharIndex + 1);
+                        currentCharIndex++;
+                    }
+
+                    let typeSpeed = isDeleting ? 20 : 40; // Faster when deleting
+
+                    if (!isDeleting && currentCharIndex === fullTxt.length) {
+                        // Pause when full word is typed
+                        typeSpeed = 2500; 
+                        isDeleting = true;
+                    } else if (isDeleting && currentCharIndex === 0) {
+                        isDeleting = false;
+                        currentPhraseIndex = (currentPhraseIndex + 1) % agentPhrases.length;
+                        typeSpeed = 400; // Short wait before next line
+                    }
+
+                    setTimeout(typeAgentSequence, typeSpeed);
+                }
+
+                // Intersection Observer to trigger cyclic rotation when on screen
+                const agentTextSection = document.querySelector('.agent-first-text');
+                if (agentTextSection && 'IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting && !hasAgentStarted) {
+                                hasAgentStarted = true;
+                                setTimeout(typeAgentSequence, 200);
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.6 });
+                    observer.observe(agentTextSection);
+                }
+            })();
+    </script>
+</body>
+
+</html>

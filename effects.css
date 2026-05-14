@@ -1,0 +1,206 @@
+/* ═══════════════════════════════════════════════════════
+   VageChain Effect System — effects.css
+   Bloom · Depth Fog · Light Trails · Soft Particles
+   Desktop: full canvas effects via effects.js
+   Mobile:  CSS-only simplified fallbacks
+═══════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────
+   BLOOM / GLOW EDGE SYSTEM
+   Layered shadows = perceptual bloom
+────────────────────────────── */
+.glow-primary {
+    box-shadow:
+        0 0 6px  rgba(221, 183, 255, 0.30),
+        0 0 20px rgba(221, 183, 255, 0.14),
+        0 0 55px rgba(221, 183, 255, 0.05);
+}
+.glow-tertiary {
+    box-shadow:
+        0 0 6px  rgba(76,  215, 246, 0.35),
+        0 0 20px rgba(76,  215, 246, 0.16),
+        0 0 55px rgba(76,  215, 246, 0.06);
+}
+.glow-secondary {
+    box-shadow:
+        0 0 6px  rgba(180, 197, 255, 0.28),
+        0 0 20px rgba(180, 197, 255, 0.12);
+}
+
+/* Bloom on interactive cards via hover */
+.glass-panel { transition: box-shadow 0.45s ease, border-color 0.45s ease; }
+.glass-panel:hover {
+    box-shadow:
+        0 0 0 1px rgba(221, 183, 255, 0.10),
+        0 8px 40px rgba(0, 0, 0, 0.45),
+        0 0 48px rgba(221, 183, 255, 0.07);
+}
+
+/* SVG / icon node bloom */
+.node-bloom {
+    filter: drop-shadow(0 0 5px rgba(221,183,255,0.65))
+            drop-shadow(0 0 18px rgba(221,183,255,0.22));
+}
+.node-bloom-cyan {
+    filter: drop-shadow(0 0 5px rgba(76,215,246,0.70))
+            drop-shadow(0 0 18px rgba(76,215,246,0.26));
+}
+
+/* Slow breathing border glow on live panels */
+@keyframes vg-borderGlow {
+    0%, 100% { box-shadow: 0 0 10px rgba(221,183,255,0.08); border-color: rgba(221,183,255,0.15); }
+    50%       { box-shadow: 0 0 28px rgba(221,183,255,0.28); border-color: rgba(221,183,255,0.32); }
+}
+.panel-bloom-pulse { animation: vg-borderGlow 6s ease-in-out infinite; }
+
+/* ──────────────────────────────
+   ORGANISM STATE CLASSES
+   Applied by JS to DOM nodes
+   when they receive/send signals
+────────────────────────────── */
+@keyframes vg-nodeEnergise {
+    0%   { opacity: 0.5; transform: scale(1);   }
+    40%  { opacity: 1;   transform: scale(1.12); }
+    100% { opacity: 0.6; transform: scale(1);   }
+}
+.vg-node-energised { animation: vg-nodeEnergise 0.5s ease forwards; }
+
+/* Signal trail on SVG elements */
+@keyframes vg-signalPulse {
+    0%,100% { stroke-opacity: 0.15; }
+    50%     { stroke-opacity: 0.80; }
+}
+.vg-edge-active { animation: vg-signalPulse 1.4s ease-in-out; }
+
+/* Cursor presence indicator: subtle ring around active zone */
+#vg-cursor-ring {
+    position: fixed; pointer-events: none; z-index: 4;
+    width: 8px; height: 8px; border-radius: 50%;
+    border: 1px solid rgba(221,183,255,0.35);
+    transform: translate(-50%,-50%);
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+}
+#vg-cursor-ring.active {
+    opacity: 1;
+    box-shadow: 0 0 0 60px rgba(221,183,255,0.03),
+                0 0 0 120px rgba(221,183,255,0.015);
+}
+
+/* ──────────────────────────────
+   DEPTH FOG (CSS overlay divs)
+   Injected by effects.js as
+   fixed, pointer-events:none layers
+────────────────────────────── */
+#vg-fog-top {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 110px; z-index: 3; pointer-events: none;
+    background: linear-gradient(to bottom,
+        rgba(255, 255, 255, 0.52) 0%,
+        rgba(255, 255, 255, 0.00) 100%);
+}
+#vg-fog-bottom {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 90px; z-index: 3; pointer-events: none;
+    background: linear-gradient(to top,
+        rgba(255, 255, 255, 0.42) 0%,
+        rgba(255, 255, 255, 0.00) 100%);
+}
+#vg-fog-left {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: 80px; z-index: 3; pointer-events: none;
+    background: linear-gradient(to right,
+        rgba(255, 255, 255, 0.35) 0%,
+        rgba(255, 255, 255, 0.00) 100%);
+}
+#vg-fog-right {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: 80px; z-index: 3; pointer-events: none;
+    background: linear-gradient(to left,
+        rgba(255, 255, 255, 0.35) 0%,
+        rgba(255, 255, 255, 0.00) 100%);
+}
+
+/* ──────────────────────────────
+   LIGHT TRAIL (CSS — mobile/static fallback)
+   Desktop: canvas trails via effects.js
+   Mobile:  these CSS elements are shown
+────────────────────────────── */
+@keyframes vg-trailMoveRight {
+    0%   { transform: translateX(-120px); opacity: 0; }
+    8%   { opacity: 1; }
+    88%  { opacity: 0.5; }
+    100% { transform: translateX(calc(100vw + 120px)); opacity: 0; }
+}
+@keyframes vg-trailMoveDiag {
+    0%   { transform: translate(-120px, 20px); opacity: 0; }
+    8%   { opacity: 0.8; }
+    90%  { opacity: 0.3; }
+    100% { transform: translate(calc(100vw + 120px), -30px); opacity: 0; }
+}
+.vg-trail {
+    position: fixed; pointer-events: none; z-index: 2;
+    height: 1px; width: 90px;
+    animation: vg-trailMoveRight linear infinite;
+    /* hidden on desktop — canvas handles it */
+    display: none;
+}
+.vg-trail-purple {
+    background: linear-gradient(to right, transparent, rgba(221,183,255,0.55), transparent);
+}
+.vg-trail-cyan {
+    background: linear-gradient(to right, transparent, rgba(76,215,246,0.45), transparent);
+    animation-name: vg-trailMoveDiag;
+}
+
+/* ──────────────────────────────
+   SOFT PARTICLE (CSS fallback)
+────────────────────────────── */
+@keyframes vg-particleDrift {
+    0%   { transform: translateY(0)     scale(1);   opacity: 0; }
+    12%  { opacity: 1; }
+    82%  { opacity: 0.35; }
+    100% { transform: translateY(-90px) scale(0.7); opacity: 0; }
+}
+.vg-particle {
+    position: fixed; border-radius: 50%;
+    pointer-events: none; z-index: 2;
+    animation: vg-particleDrift ease-in-out infinite;
+    display: none; /* desktop: canvas handles */
+}
+
+/* ──────────────────────────────
+   EFFECT CANVAS
+────────────────────────────── */
+#vg-effects-canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 1;
+}
+
+/* ──────────────────────────────
+   MOBILE SIMPLIFIED MODE
+   Show CSS fallbacks, hide canvas
+────────────────────────────── */
+@media (max-width: 767px) {
+    #vg-effects-canvas { display: none; }
+    #vg-fog-top, #vg-fog-bottom, #vg-fog-left, #vg-fog-right { display: none; }
+
+    /* Show CSS light trails (mobile replacement) */
+    .vg-trail { display: block; }
+    .vg-particle { display: block; }
+
+    /* Reduce bloom intensity on mobile */
+    .glow-primary   { box-shadow: 0 0 14px rgba(221,183,255,0.20); }
+    .glow-tertiary  { box-shadow: 0 0 14px rgba(76,215,246,0.20); }
+    .glow-secondary { box-shadow: 0 0 14px rgba(180,197,255,0.18); }
+    .glass-panel:hover { box-shadow: none; }
+    .panel-bloom-pulse { animation: none; }
+}
+
+/* Respect user preference */
+@media (prefers-reduced-motion: reduce) {
+    .vg-trail, .vg-particle, .panel-bloom-pulse,
+    .node-bloom, .node-bloom-cyan { animation: none !important; filter: none !important; }
+    #vg-effects-canvas { display: none; }
+}

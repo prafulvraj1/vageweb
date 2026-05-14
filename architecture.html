@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>VageChain - Architecture &amp; System Design</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@700&amp;family=Manrope:wght@400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Theme Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#842bd2",
+                        "on-error": "#ffffff",
+                        "tertiary": "#007a8f",
+                        "on-primary-container": "#ffffff",
+                        "inverse-primary": "#ddb7ff",
+                        "surface-variant": "#e9ecef",
+                        "inverse-surface": "#11131a",
+                        "secondary-container": "#f1f3f5",
+                        "on-primary-fixed": "#000000",
+                        "on-secondary-fixed": "#000000",
+                        "surface-dim": "#ffffff",
+                        "surface-container-highest": "#ced4da",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#000000",
+                        "secondary-fixed": "#dee2e6",
+                        "error-container": "#93000a",
+                        "secondary": "#0053db",
+                        "outline": "#adb5bd",
+                        "inverse-on-surface": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "primary-fixed-dim": "#842bd2",
+                        "on-tertiary-fixed": "#000000",
+                        "on-background": "#000000",
+                        "primary-fixed": "#dee2e6",
+                        "on-secondary-fixed-variant": "#0053db",
+                        "surface-container-low": "#f1f3f5",
+                        "primary-container": "#842bd2",
+                        "surface": "#ffffff",
+                        "surface-tint": "#842bd2",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#212529",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#000000",
+                        "background": "#ffffff",
+                        "on-secondary-container": "#000000",
+                        "surface-container-high": "#dee2e6",
+                        "tertiary-fixed": "#e9ecef",
+                        "secondary-fixed-dim": "#0053db",
+                        "on-tertiary-container": "#000000",
+                        "on-primary-fixed-variant": "#842bd2",
+                        "on-tertiary-fixed-variant": "#007a8f",
+                        "tertiary-container": "#007a8f",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#007a8f",
+                        "surface-container": "#e9ecef",
+                        "error": "#ffb4ab",
+                        "outline-variant": "#e9ecef"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-lg": "32px",
+                        "margin": "40px",
+                        "stack-sm": "8px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "stack-md": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": [
+                            "Manrope"
+                        ],
+                        "body-lg": [
+                            "Manrope"
+                        ],
+                        "data-mono": [
+                            "Space Grotesk"
+                        ],
+                        "label-caps": [
+                            "Inter"
+                        ],
+                        "headline-lg": [
+                            "Space Grotesk"
+                        ],
+                        "headline-xl": [
+                            "Space Grotesk"
+                        ]
+                    },
+                    "fontSize": {
+                        "body-md": [
+                            "16px",
+                            {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "body-lg": [
+                            "18px",
+                            {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                            }
+                        ],
+                        "data-mono": [
+                            "14px",
+                            {
+                                "lineHeight": "1.4",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "500"
+                            }
+                        ],
+                        "label-caps": [
+                            "12px",
+                            {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "headline-lg": [
+                            "32px",
+                            {
+                                "lineHeight": "1.2",
+                                "fontWeight": "600"
+                            }
+                        ],
+                        "headline-xl": [
+                            "48px",
+                            {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                            }
+                        ]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-panel {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+        }
+
+        .glass-glow-hover:hover {
+            border-color: #842bd2;
+            transition: all 0.3s ease;
+        }
+
+        /* Scroll-stage */
+        .scroll-stage {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .scroll-stage.stage-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-stage:nth-child(2) {
+            transition-delay: 0.08s;
+        }
+
+        .scroll-stage:nth-child(3) {
+            transition-delay: 0.16s;
+        }
+
+        .scroll-stage:nth-child(4) {
+            transition-delay: 0.24s;
+        }
+
+        .stage-fill-bar {
+            height: 3px;
+            width: 0%;
+            border-radius: 99px;
+            transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Architecture module glows on scroll reveal */
+        .arch-section {
+            border-left: 2px solid transparent;
+            transition: border-color 0.6s ease;
+        }
+
+        .arch-section.stage-visible {
+            border-left-color: rgba(221, 183, 255, 0.3);
+        }
+
+        /* Telemetry ticker */
+        @keyframes ticker-scroll {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(-50%, 0, 0);
+            }
+        }
+
+        @keyframes rainbow-gold-shine {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .ticker-container {
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(90deg,
+                    #bf953f 0%,
+                    #fcf6ba 12%,
+                    #b38728 25%,
+                    #ff5e62 40%,
+                    #ffd97d 50%,
+                    #00f2fe 60%,
+                    #b38728 75%,
+                    #fcf6ba 88%,
+                    #bf953f 100%);
+            background-size: 200% auto;
+            animation: rainbow-gold-shine 6s linear infinite;
+            padding: 0.75rem 0;
+            border-top: 1px solid rgba(170, 119, 28, 0.4);
+            border-bottom: 1px solid rgba(170, 119, 28, 0.4);
+            position: relative;
+            z-index: 20;
+        }
+
+        .ticker-wrap {
+            display: flex;
+            width: max-content;
+        }
+
+        .ticker-track-anim {
+            display: flex;
+            white-space: nowrap;
+            gap: 3rem;
+            padding-right: 3rem;
+            animation: ticker-scroll 30s linear infinite;
+        }
+
+        /* Live pulse dot */
+        @keyframes livePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .live-dot {
+            animation: livePulse 1.8s ease-in-out infinite;
+        }
+
+        /* High-Fidelity Premium Footer Styles with White BG */
+        .footer {
+            background: #ffffff;
+            padding: 6rem 0 4rem 0;
+            color: #4b5563;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .footer-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #111827 30%, #b38728 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-nav-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .footer-nav-section a {
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: color 0.3s ease, transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .footer-nav-section a:hover {
+            color: #b38728;
+            transform: translateX(4px);
+        }
+
+        .footer-img-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: -4rem auto 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .footer-vagechain {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16rem;
+            font-weight: 500;
+            letter-spacing: -0.1em;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.08em;
+            user-select: none;
+            pointer-events: none;
+            width: 100%;
+            padding: 0;
+        }
+
+        .footer-vagechain span {
+            color: #000000;
+            display: inline-block;
+        }
+
+        @media (max-width: 768px) {
+            .footer-vagechain {
+                font-size: 4rem;
+            }
+        }
+
+        /* Typewriter effect utilities */
+        .typing-cursor {
+            display: inline-block;
+            width: 4px;
+            height: 0.9em;
+            background-color: #842bd2 !important;
+            margin-left: 6px;
+            animation: blink 0.9s step-end infinite;
+            vertical-align: middle;
+            -webkit-text-fill-color: #842bd2 !important;
+        }
+
+        @keyframes blink {
+
+            from,
+            to {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+    <script src="./network.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Scroll-stage reveals for arch sections
+            const stages = document.querySelectorAll('.scroll-stage, .arch-section');
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('stage-visible');
+                        const bar = e.target.querySelector('.stage-fill-bar');
+                        if (bar) setTimeout(() => bar.style.width = bar.dataset.fill, 100);
+                    }
+                });
+            }, { threshold: 0.2 });
+            stages.forEach(s => obs.observe(s));
+
+            // Live system health metrics
+            const metrics = [
+                { id: 'live-block-h', getValue: () => '#' + (140893 + Math.floor(Date.now() / 1200) % 100).toLocaleString(), interval: 1200 },
+                { id: 'live-finality', getValue: () => (1.15 + Math.random() * 0.12).toFixed(2) + 's', interval: 900 },
+                { id: 'live-threads', getValue: () => (14 + Math.floor(Math.random() * 8)) + ' threads', interval: 1600 },
+                { id: 'live-proof-size', getValue: () => (280 + Math.floor(Math.random() * 80)) + 'B', interval: 2000 },
+            ];
+            metrics.forEach(m => {
+                const el = document.getElementById(m.id);
+                if (el) setInterval(() => { el.textContent = m.getValue(); }, m.interval);
+            });
+
+            // Typewriter effect for Heading
+            const c1 = document.getElementById('container-l1');
+            const c2 = document.getElementById('container-l2');
+            const t1 = document.getElementById('tw-1');
+            const t2 = document.getElementById('tw-2');
+
+            if (t1 && t2) {
+                const txt1 = "Hyper-Efficient Architecture Driving";
+                const txt2 = "The Next Global Digital Economy";
+                const cursor = document.querySelector('.typing-cursor');
+                let i = 0, j = 0;
+
+                function type2() {
+                    if (j < txt2.length) {
+                        t2.textContent += txt2.charAt(j);
+                        j++;
+                        setTimeout(type2, 35 + Math.random() * 30);
+                    }
+                }
+
+                function type1() {
+                    if (i < txt1.length) {
+                        t1.textContent += txt1.charAt(i);
+                        i++;
+                        setTimeout(type1, 35 + Math.random() * 30);
+                    } else {
+                        // Transition cursor to line 2
+                        if (cursor && c2) c2.appendChild(cursor);
+                        setTimeout(type2, 200);
+                    }
+                }
+                setTimeout(type1, 800);
+            }
+        });
+    </script>
+    <link rel="stylesheet" href="./responsive.css" />
+    <script src="./responsive.js" defer></script>
+</head>
+
+<body
+    class="bg-background text-on-background font-body-md min-h-screen overflow-x-hidden selection:bg-primary/30 selection:text-primary">
+    <header
+        class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-outline-variant/30 bg-surface px-10 py-4">
+        <a href="./index.html" class="flex items-center gap-3 text-on-surface hover:opacity-90 transition-opacity">
+            <div class="size-8">
+                <svg fill="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="gold-glow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="0.8" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+                    <polygon points="10,10 50,10 28,24" fill="#2b5cf6" />
+                    <polygon points="90,10 50,10 72,24" fill="#2b5cf6" />
+                    <polygon points="10,10 28,24 30,50" fill="#1e40af" />
+                    <polygon points="90,10 72,24 70,50" fill="#1e40af" />
+                    <polygon points="50,10 28,24 30,50" fill="#00d8f6" />
+                    <polygon points="50,10 72,24 70,50" fill="#00d8f6" />
+                    <polygon points="50,10 30,50 70,50" fill="#2b5cf6" />
+                    <polygon points="30,50 70,50 50,60" fill="#00d8f6" />
+                    <polygon points="30,50 50,60 50,90" fill="#1e40af" />
+                    <polygon points="70,50 50,60 50,90" fill="#1e40af" />
+                    <g stroke="#ffca28" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round"
+                        filter="url(#gold-glow)">
+                        <polygon points="10,10 90,10 50,90" fill="none" stroke-width="2.2" />
+                        <line x1="50" y1="10" x2="28" y2="24" />
+                        <line x1="50" y1="10" x2="72" y2="24" />
+                        <line x1="10" y1="10" x2="28" y2="24" />
+                        <line x1="90" y1="10" x2="72" y2="24" />
+                        <line x1="28" y1="24" x2="30" y2="50" />
+                        <line x1="72" y1="24" x2="70" y2="50" />
+                        <line x1="50" y1="10" x2="30" y2="50" />
+                        <line x1="50" y1="10" x2="70" y2="50" />
+                        <line x1="30" y1="50" x2="70" y2="50" />
+                        <line x1="30" y1="50" x2="50" y2="60" />
+                        <line x1="70" y1="50" x2="50" y2="60" />
+                        <line x1="50" y1="60" x2="50" y2="90" />
+                    </g>
+                </svg>
+            </div>
+            <h2 class="text-on-surface text-lg font-bold leading-tight tracking-tight">VageChain</h2>
+        </a>
+        <nav class="flex items-center gap-8">
+            <a class="text-on-surface-variant text-sm font-medium leading-normal hover:text-primary transition-colors"
+                href="./index.html">Home</a>
+            <a class="text-on-surface-variant text-sm font-medium leading-normal hover:text-primary transition-colors"
+                href="./solutions.html">Solutions</a>
+            <a class="text-primary font-bold text-sm leading-normal" href="./architecture.html">Architecture</a>
+            <a class="text-on-surface-variant text-sm font-medium leading-normal hover:text-primary transition-colors"
+                href="./roadmap.html">Roadmap</a>
+        </nav>
+    </header>
+    <!-- LIVE DECENTRALIZED TELEMETRY BAR (Metallic Gold Background with Rainbow Shine) -->
+    <div class="ticker-container">
+        <div class="ticker-wrap">
+            <div class="ticker-track-anim font-data-mono text-xs text-neutral-950 font-semibold flex items-center">
+                <span>⬤ <span class="text-tertiary" id="live-node-count">1,484</span> Active Nodes</span>
+                <span>⬤ Block <span class="text-primary" id="live-block">#1,40,972</span></span>
+                <span>⬤ <span class="text-secondary" id="live-tps">4,286 TPS</span></span>
+                <span>⬤ Finality ~1.2s</span>
+                <span>⬤ MEV Extracted: <span class="text-tertiary">$0.00</span></span>
+                <span>⬤ Validators Online: <span class="text-primary">284</span></span>
+                <span>⬤ HotStuff Round: <span class="text-secondary">Active</span></span>
+                <!-- duplicate for seamless loop -->
+                <span>⬤ Active Nodes: 1,482</span>
+                <span>⬤ Block #140,893</span>
+                <span>⬤ 4,512 TPS</span>
+                <span>⬤ Finality ~1.2s</span>
+                <span>⬤ MEV Extracted: $0.00</span>
+                <span>⬤ Validators Online: 284</span>
+                <span>⬤ HotStuff Round: Active</span>
+            </div>
+            <div class="ticker-track-anim font-data-mono text-xs text-neutral-950 font-semibold flex items-center"
+                aria-hidden="true">
+                <span>⬤ <span class="text-tertiary">1,484</span> Active Nodes</span>
+                <span>⬤ Block <span class="text-primary">#1,40,972</span></span>
+                <span>⬤ <span class="text-secondary">4,286 TPS</span></span>
+                <span>⬤ Finality ~1.2s</span>
+                <span>⬤ MEV Extracted: <span class="text-tertiary">$0.00</span></span>
+                <span>⬤ Validators Online: <span class="text-primary">284</span></span>
+                <span>⬤ HotStuff Round: <span class="text-secondary">Active</span></span>
+                <!-- duplicate for seamless loop -->
+                <span>⬤ Active Nodes: 1,482</span>
+                <span>⬤ Block #140,893</span>
+                <span>⬤ 4,512 TPS</span>
+                <span>⬤ Finality ~1.2s</span>
+                <span>⬤ MEV Extracted: $0.00</span>
+                <span>⬤ Validators Online: 284</span>
+                <span>⬤ HotStuff Round: Active</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT TARGET RESERVED -->
+    <main
+        class="relative py-24 md:py-32 px-10 bg-surface overflow-hidden flex flex-col justify-center">
+        <!-- Ambient glow -->
+        <div class="absolute top-0 left-0 w-full max-w-4xl h-[400px] opacity-20 pointer-events-none"
+            style="background: radial-gradient(circle at center, #ddb7ff 0%, transparent 70%); filter: blur(70px);">
+        </div>
+
+        <!-- Clouds & Lightning Background -->
+        <style>
+            @keyframes cloud-drift-1 { 0% { transform: translateX(-5vw); } 100% { transform: translateX(15vw); } }
+            @keyframes cloud-drift-2 { 0% { transform: translateX(10vw); } 100% { transform: translateX(-15vw); } }
+            @keyframes cloud-drift-3 { 0% { transform: translateX(0vw); } 100% { transform: translateX(25vw); } }
+            @keyframes cloud-drift-4 { 0% { transform: translateX(20vw); } 100% { transform: translateX(-5vw); } }
+            @keyframes lightning-flash {
+                0%, 91%, 93%, 95%, 100% { opacity: 0; }
+                92% { opacity: 1; }
+                94% { opacity: 0.6; }
+                96% { opacity: 0.9; }
+            }
+            .cloud-shape {
+                position: absolute;
+                border-radius: 200px;
+                filter: blur(8px);
+                box-shadow: inset 0px -10px 30px rgba(0,0,0,0.15);
+            }
+            .cloud-shape::before, .cloud-shape::after {
+                content: '';
+                position: absolute;
+                background: inherit;
+                border-radius: 50%;
+            }
+            /* White/Light Blue Cloud */
+            .cloud-bg-1 {
+                background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(135,206,250,0.6));
+                width: 350px; height: 120px; top: 5%; left: 5%; animation: cloud-drift-1 45s infinite linear alternate;
+            }
+            .cloud-bg-1::before { width: 180px; height: 180px; top: -80px; left: 50px; }
+            .cloud-bg-1::after { width: 120px; height: 120px; top: -50px; right: 40px; }
+            /* Darker Blue Cloud */
+            .cloud-bg-2 {
+                background: linear-gradient(to bottom, rgba(176,224,230,0.8), rgba(70,130,180,0.7));
+                width: 450px; height: 140px; top: 10%; right: 10%; animation: cloud-drift-2 50s infinite linear alternate-reverse;
+            }
+            .cloud-bg-2::before { width: 220px; height: 220px; top: -110px; left: 70px; }
+            .cloud-bg-2::after { width: 160px; height: 160px; top: -70px; right: 60px; }
+            /* Small White/Blue Cloud */
+            .cloud-bg-3 {
+                background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(100,149,237,0.5));
+                width: 250px; height: 90px; top: 15%; left: 35%; animation: cloud-drift-3 40s infinite linear alternate;
+            }
+            .cloud-bg-3::before { width: 120px; height: 120px; top: -50px; left: 30px; }
+            .cloud-bg-3::after { width: 100px; height: 100px; top: -40px; right: 20px; }
+            /* Med Blue/White Cloud */
+            .cloud-bg-4 {
+                background: linear-gradient(to bottom, rgba(224,255,255,0.7), rgba(65,105,225,0.6));
+                width: 300px; height: 100px; top: 2%; right: 40%; animation: cloud-drift-4 35s infinite linear alternate-reverse;
+            }
+            .cloud-bg-4::before { width: 150px; height: 150px; top: -70px; left: 40px; }
+            .cloud-bg-4::after { width: 110px; height: 110px; top: -30px; right: 30px; }
+
+            /* Gold/Yellow Lightning Effects */
+            .lightning-glow {
+                background: radial-gradient(ellipse at top, rgba(255, 215, 0, 0.4) 0%, rgba(255, 140, 0, 0.1) 40%, transparent 100%);
+                animation: lightning-flash 8s infinite;
+            }
+            .lightning-strike-1 {
+                position: absolute; top: 0; left: 30%; width: 40px; height: 350px;
+                background: #ffd700;
+                clip-path: polygon(50% 0%, 100% 0%, 60% 40%, 90% 40%, 10% 100%, 40% 50%, 0% 50%);
+                animation: lightning-flash 8s infinite;
+                filter: blur(1px) drop-shadow(0 0 20px #ffcc00);
+            }
+            .lightning-strike-2 {
+                position: absolute; top: 0; left: 70%; width: 30px; height: 250px;
+                background: #ffea00;
+                clip-path: polygon(40% 0%, 90% 0%, 50% 45%, 80% 45%, 0% 100%, 30% 55%, 0% 55%);
+                animation: lightning-flash 8s infinite; animation-delay: 0.1s;
+                filter: blur(1px) drop-shadow(0 0 15px #ffea00);
+            }
+        </style>
+        <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+            <div class="cloud-shape cloud-bg-1"></div>
+            <div class="cloud-shape cloud-bg-2"></div>
+            <div class="cloud-shape cloud-bg-3"></div>
+            <div class="cloud-shape cloud-bg-4"></div>
+            <div class="absolute top-0 left-[-10%] w-[120%] h-[80%] lightning-glow blur-2xl"></div>
+            <div class="lightning-strike-1"></div>
+            <div class="lightning-strike-2"></div>
+        </div>
+
+        <div class="relative z-10 w-full text-left space-y-8">
+            <h1
+                class="font-headline-xl text-4xl md:text-6xl lg:text-7xl tracking-tight text-on-surface flex flex-col gap-2">
+                <span class="block opacity-90" id="container-l1"><span id="tw-1"></span><span
+                        class="typing-cursor"></span></span>
+                <span
+                    class="block bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent drop-shadow-sm"
+                    id="container-l2"><span id="tw-2"></span></span>
+            </h1>
+
+            <div class="min-h-[3rem] flex items-center justify-start">
+                <p class="font-body-lg text-lg md:text-xl text-on-surface-variant max-w-2xl leading-relaxed">
+                    Delivering sub-second finality, institutional-grade security, and unparalleled transaction
+                    throughput through innovative multi-layered sharding and state-optimized execution.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <section id="robots-section" class="relative z-20 w-full py-20 md:py-32 bg-surface flex flex-col items-center justify-center">
+        <!-- Ambient background interaction glow for mix-blend optimization (clipped to avoid horizontal overflow) -->
+        <div class="absolute inset-0 pointer-events-none overflow-hidden">
+            <div class="absolute inset-0 opacity-30" 
+                 style="background: radial-gradient(ellipse at 50% 50%, #ddb7ff 0%, #0053db 30%, transparent 70%); filter: blur(80px);">
+            </div>
+        </div>
+
+        <!-- Transformers Robots Foreground Composition -->
+        <div
+            class="relative z-10 w-full max-w-[1600px] mx-auto flex flex-col md:flex-row justify-center items-center md:items-end gap-1 md:gap-0 md:-space-x-48 h-full px-4">
+            <div data-parallax-x="-600" id="trigger-mempool" class="w-[85%] md:w-auto h-auto flex justify-center transition-all duration-300 ease-out relative z-10 pointer-events-none hover:z-50 cursor-pointer hover:brightness-110 active:scale-95 group">
+                <img src="./assets/aim.png" alt="Aiming Robot"
+                    class="max-w-[480px] w-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 filter grayscale group-hover:grayscale-0 pointer-events-auto">
+                <div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 rounded-3xl blur-xl transition-opacity duration-500 pointer-events-none"></div>
+            </div>
+            <div data-parallax-y="400" id="trigger-execution" class="w-[85%] md:w-auto h-auto flex justify-center transition-all duration-300 ease-out relative z-20 pointer-events-none hover:z-50 cursor-pointer hover:brightness-110 active:scale-95 group">
+                <img src="./assets/punch.png" alt="Punching Robot"
+                    class="max-w-[550px] w-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 transform md:translate-x-[50px] filter grayscale group-hover:grayscale-0 pointer-events-auto">
+                <div class="absolute inset-0 bg-secondary/5 opacity-0 group-hover:opacity-100 rounded-3xl blur-xl transition-opacity duration-500 pointer-events-none"></div>
+            </div>
+            <div data-parallax-y="-500" id="trigger-consensus" class="w-[85%] md:w-auto h-auto flex justify-center transition-all duration-300 ease-out relative z-30 pointer-events-none hover:z-50 cursor-pointer hover:brightness-110 active:scale-95 group">
+                <img src="./assets/fly.png" alt="Flying Robot"
+                    class="max-w-[400px] w-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 transform md:-translate-y-[450px] -translate-y-[220px] filter grayscale group-hover:grayscale-0 pointer-events-auto">
+                <div class="absolute inset-0 bg-tertiary/5 opacity-0 group-hover:opacity-100 rounded-3xl blur-xl transition-opacity duration-500 pointer-events-none"></div>
+            </div>
+            <div data-parallax-x="600" id="trigger-state" class="w-[85%] md:w-auto h-auto flex justify-center transition-all duration-300 ease-out relative z-10 pointer-events-none hover:z-50 cursor-pointer hover:brightness-110 active:scale-95 group">
+                <img src="./assets/shield.png" alt="Shield Robot"
+                    class="max-w-[550px] w-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 filter grayscale group-hover:grayscale-0 pointer-events-auto">
+                <div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 rounded-3xl blur-xl transition-opacity duration-500 pointer-events-none"></div>
+            </div>
+        </div>
+
+        <!-- NEW ARCHITECTURE DETAIL PANEL -->
+        <div id="detail-panel" class="relative z-10 w-full max-w-5xl mx-auto mt-12 px-6 opacity-0 max-h-0 overflow-hidden transition-all duration-700 ease-in-out">
+            <div class="bg-surface/50 backdrop-blur-xl border border-on-surface/10 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                <!-- Dynamic content will mount here -->
+                <button id="close-panel" class="absolute top-6 right-6 text-on-surface-variant hover:text-on-surface transition-colors text-2xl">&times;</button>
+                <div id="detail-content" class="flex flex-col gap-8"></div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                let activeTypingTimer = null;
+                
+                function typeWriterPanel(el, txt, speed = 25) {
+                    el.innerHTML = '<span id="panel-title-text"></span><span class="w-2 h-8 bg-primary ml-1 inline-block animate-pulse"></span>';
+                    const span = document.getElementById('panel-title-text');
+                    let i = 0;
+                    function type() {
+                        if (i < txt.length) {
+                            span.textContent += txt.charAt(i);
+                            i++;
+                            activeTypingTimer = setTimeout(type, speed);
+                        } else {
+                            // Hide cursor after finished
+                            el.querySelector('.animate-pulse').style.display = 'none';
+                        }
+                    }
+                    type();
+                }
+
+                // ARCHITECTURE CONTENT DB
+                const contentDB = {
+                    'trigger-mempool': {
+                        title: 'Mempool Layer: Encrypted Commit-Reveal',
+                        paras: [
+                            'Maximal Extractable Value (MEV) represents billions of dollars drained continuously from everyday users by sophisticated searchers and builders who dominate probabilistic mempools. On standard public chains, transaction intent is globally visible before confirmation, allowing predatory algorithms to step in front of incoming trades and silently siphon off arbitrary value through sandwiching strategies.',
+                            'VageChain neutralizes this structural exploitation at the absolute fundamental layer through a strict bipartite cryptographic lifecycle. The initial Commit Phase requires users to broadcast a mathematically concealed transaction hash C(Tx, r), shielding all execution logic, swapping directions, and gas bids behind an opaque algorithmic payload until consensus is solidified.',
+                            'Once this cryptographic commitment enters the network, the Pipelined HotStuff consensus engine strictly sequences it into the definitive global ordering. Because the network sequences non-readable commitments rather than raw text transactions, validators and builders function completely blind, entirely eliminating their ability to optimize blocks for their own profit or insert frontrunning bundles.',
+                            'Directly following absolute confirmation at height H, the system pivots to the Execution Reveal Phase. The corresponding user or designated distributed relayer nodes broadcast the raw transaction data to matching keys. The execution pipeline dynamically maps this revealed data exactly to the previously established slot, unlocking the compute payload just milliseconds before execution triggers.',
+                            'By splitting the knowledge of ordering from the knowledge of execution intent, VageChain mathematically dissolves the concept of the "dark forest". Market-driven information asymmetry disappears entirely, securing institutional-level trading protection as a native layer primitives without requiring external relays, auction builders, or complex bundle mechanisms.'
+                        ],
+                        diagram: `
+                            <div class="w-full relative py-8 px-2 flex flex-col justify-center">
+                                <!-- Smooth animated gradient bridge connection -->
+                                <div class="absolute top-[48px] left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-primary via-secondary to-tertiary opacity-40"></div>
+                                <div class="flex justify-between relative z-10">
+                                    <!-- Node 1 -->
+                                    <div class="flex flex-col items-center text-center gap-2 w-1/4">
+                                         <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-surface shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-on-surface/5 flex items-center justify-center text-primary transition-transform hover:scale-105 hover:shadow-lg"><span class="material-symbols-outlined text-3xl">fingerprint</span></div>
+                                         <div class="text-[10px] md:text-xs font-bold tracking-wider text-on-surface uppercase mt-1">Tx Intent</div>
+                                    </div>
+                                    <!-- Node 2 -->
+                                    <div class="flex flex-col items-center text-center gap-2 w-1/4">
+                                         <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-primary to-secondary shadow-[0_8px_25px_-5px_rgba(132,43,210,0.4)] flex items-center justify-center text-white transition-transform hover:scale-105"><span class="material-symbols-outlined text-3xl">lock</span></div>
+                                         <div class="text-[10px] md:text-xs font-bold tracking-wider text-primary uppercase mt-1">Commit</div>
+                                    </div>
+                                    <!-- Node 3 -->
+                                    <div class="flex flex-col items-center text-center gap-2 w-1/4">
+                                         <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-surface shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-on-surface/5 flex items-center justify-center text-secondary transition-transform hover:scale-105 hover:shadow-lg"><span class="material-symbols-outlined text-3xl">account_tree</span></div>
+                                         <div class="text-[10px] md:text-xs font-bold tracking-wider text-on-surface uppercase mt-1">Sequence</div>
+                                    </div>
+                                    <!-- Node 4 -->
+                                    <div class="flex flex-col items-center text-center gap-2 w-1/4">
+                                         <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-secondary to-tertiary shadow-[0_8px_25px_-5px_rgba(0,83,219,0.4)] flex items-center justify-center text-white transition-transform hover:scale-105"><span class="material-symbols-outlined text-3xl">lock_open</span></div>
+                                         <div class="text-[10px] md:text-xs font-bold tracking-wider text-secondary uppercase mt-1">Reveal</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `
+                    },
+                    'trigger-execution': {
+                        title: 'Execution Model: Parallel EVM (OCC)',
+                        paras: [
+                            'Legacy Ethereum nodes behave as strictly single-threaded state machines, forcing every computation to wait in a monolithic line for total global sequential processing. This inherently throttles raw system throughput to whatever a single CPU core can manage, artificially trapping the entire ecosystem within strict and expensive processing constraints regardless of total network capacity.',
+                            'The VageChain Parallel EVM permanently dismantles this bottleneck using Optimistic Concurrency Control (OCC). Instead of serialization, incoming transactions execute speculatively and simultaneously across all available processor cores, optimistically assuming no overlaps exist between their chosen target states unless mathematically proven otherwise during integration.',
+                            'To manage these race conditions safely, dynamic dependency analyzers operate asynchronously within the virtualization boundary. As transactions race ahead on multiple compute threads, the engine dynamically logs an ephemeral ledger of exactly which memory slots were touched, defining rigid Read and Write sets for real-time validation cycles.',
+                            'Should two concurrent threads collide trying to modify identical state variables, the sophisticated Scheduler Engine instantly detects the transaction conflict, transparently aborts the secondary thread, and requeues it for direct serial execution. Most workloads remain non-overlapping, unlocking spectacular multiples of throughput without explicit parallel logic needed in smart contracts.',
+                            'Developers bypass all of this underlying complexity entirely, maintaining total, flawless compatibility with current Ethereum toolchains. Solidity source code compiled via standard Hardhat or Foundry environments deploys identically, and executes with optimized acceleration right out of the box—achieving blistering parallelism while retaining pure EVM safety semantics.'
+                        ],
+                        diagram: `
+                            <div class="w-full relative flex justify-center items-center min-h-[250px] p-4 overflow-visible">
+                                <!-- Center Dispatcher Core -->
+                                <div class="absolute w-24 h-24 rounded-full bg-gradient-to-br from-primary via-primary to-secondary shadow-[0_10px_40px_-10px_rgba(132,43,210,0.5)] flex flex-col items-center justify-center text-white z-20 border-4 border-surface/20 backdrop-blur-md animate-pulse duration-[4s]">
+                                    <span class="text-[10px] font-bold uppercase tracking-widest opacity-70">OCC</span>
+                                    <span class="text-xs font-bold leading-none mt-1 text-center">Scheduler</span>
+                                </div>
+                                
+                                <!-- Connection Radiants -->
+                                <div class="absolute inset-0 pointer-events-none overflow-visible">
+                                    <svg class="w-full h-full" viewBox="0 0 400 250" fill="none" stroke="currentColor">
+                                         <!-- Left side Inputs -->
+                                         <path d="M200 125 Q 140 60 50 60" stroke-width="2" class="text-primary opacity-20" stroke-dasharray="4,4" />
+                                         <path d="M200 125 L 50 125" stroke-width="2" class="text-secondary opacity-20" stroke-dasharray="4,4" />
+                                         <path d="M200 125 Q 140 190 50 190" stroke-width="2" class="text-tertiary opacity-20" stroke-dasharray="4,4" />
+                                         <!-- Right side Outputs -->
+                                         <path d="M200 125 Q 260 60 350 60" stroke-width="2" class="text-primary" />
+                                         <path d="M200 125 L 350 125" stroke-width="2" class="text-secondary" />
+                                         <path d="M200 125 Q 260 190 350 190" stroke-width="2" class="text-tertiary" />
+                                    </svg>
+                                </div>
+                                
+                                <!-- Left: Floating Cores -->
+                                <div class="absolute left-0 top-[40px] px-3 py-2 bg-surface border border-on-surface/5 rounded-xl text-xs font-bold shadow-lg text-on-surface flex items-center gap-2 transform hover:-translate-x-1 transition-transform duration-300"><div class="w-2 h-2 rounded-full bg-primary"></div>vCPU 1</div>
+                                <div class="absolute left-0 top-[115px] px-3 py-2 bg-surface border border-on-surface/5 rounded-xl text-xs font-bold shadow-lg text-on-surface flex items-center gap-2 transform hover:-translate-x-1 transition-transform duration-300"><div class="w-2 h-2 rounded-full bg-secondary"></div>vCPU 2</div>
+                                <div class="absolute left-0 top-[190px] px-3 py-2 bg-surface border border-on-surface/5 rounded-xl text-xs font-bold shadow-lg text-on-surface flex items-center gap-2 transform hover:-translate-x-1 transition-transform duration-300"><div class="w-2 h-2 rounded-full bg-tertiary"></div>vCPU 3</div>
+
+                                <!-- Right: State Commits -->
+                                <div class="absolute right-0 top-[40px] px-4 py-2 bg-gradient-to-r from-surface to-primary/5 border border-primary/20 rounded-xl text-[10px] font-bold shadow-md text-primary uppercase tracking-wider transform hover:translate-x-1 transition-transform duration-300">Merge A</div>
+                                <div class="absolute right-0 top-[115px] px-4 py-2 bg-gradient-to-r from-surface to-secondary/5 border border-secondary/20 rounded-xl text-[10px] font-bold shadow-md text-secondary uppercase tracking-wider transform hover:translate-x-1 transition-transform duration-300">Merge B</div>
+                                <div class="absolute right-0 top-[190px] px-4 py-2 bg-gradient-to-r from-surface to-tertiary/5 border border-tertiary/20 rounded-xl text-[10px] font-bold shadow-md text-tertiary uppercase tracking-wider transform hover:translate-x-1 transition-transform duration-300">Merge C</div>
+                            </div>
+                        `
+                    },
+                    'trigger-consensus': {
+                        title: 'Consensus Algorithm: Pipelined HotStuff BFT',
+                        paras: [
+                            'Modern enterprise platforms cannot operate on probabilistic finality models offered by traditional Proof-of-Work or older Proof-of-Stake chains where confirmations are inherently reversible. Institutions require mathematical, deterministic finality—an immutable guarantee that once a block is validated by the threshold quorum, its transaction entries can never be decoupled from history.',
+                            'VageChain architects this reliability on the backbone of Pipelined HotStuff, a leading-edge Byzantine Fault Tolerant protocol specifically chosen for its unparalleled safety constraints and consistent liveness behaviors under adversarial network conditions. This leader-oriented mechanic optimizes inter-validator synchronization, drastically trimming down historical messaging overheads.',
+                            'Unlike standard BFT schemes which force blocking gaps while waiting for full multistage network echoes, the pipelined adaptation overlaps iterative voting cycles directly into successive block proposals. A new proposal header physically encloses and authenticates the voting certificate of its immediate predecessor, collapsing rounds into a single fluid broadcast event stream.',
+                            'The resulting confirmation timelines are blistering: blocks land and crystallize sequentially within sub-second intervals. Even in complex global distributions, the pipelining effect pushes validator responsiveness toward the absolute theoretical speed limit of global network propagation, driving transactional finality faster than modern credit card authorization networks.',
+                            'Crucially, this engine acts functionally distinct from computation, ordering block commits linearly while parallel execution happens asynchronously. By effectively uncoupling serialization from computational work, the consensus layer dynamically pushes maximum valid payloads into the machine continuously, avoiding any lag imposed by complex contract operations.'
+                        ],
+                        diagram: `
+                            <div class="w-full relative py-8 flex flex-col items-center justify-center gap-4 min-h-[220px] overflow-visible">
+                                <div class="flex items-center -space-x-6 md:-space-x-10 overflow-visible transform scale-95">
+                                     <!-- Block History -->
+                                     <div class="w-20 h-20 md:w-28 md:h-28 bg-surface/50 border border-on-surface/5 rounded-2xl shadow-md transform rotate-[-12deg] relative z-10 flex items-center justify-center backdrop-blur-sm opacity-40">
+                                        <span class="text-[10px] font-bold uppercase tracking-tighter">Block n-2</span>
+                                     </div>
+                                     
+                                     <!-- Passed Consensus Phase -->
+                                     <div class="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-surface to-primary/5 border border-primary/10 rounded-2xl shadow-xl transform rotate-[-6deg] relative z-20 flex flex-col items-center justify-center backdrop-blur-md transition-all hover:-translate-y-2">
+                                        <span class="material-symbols-outlined text-primary text-3xl opacity-70">fact_check</span>
+                                        <span class="text-[10px] font-bold text-primary mt-1 tracking-widest uppercase">Prepare</span>
+                                     </div>
+                                     
+                                     <!-- Central Live Block -->
+                                     <div class="w-28 h-28 md:w-36 md:h-36 bg-gradient-to-br from-primary to-secondary text-white rounded-3xl shadow-[0_20px_50px_-10px_rgba(132,43,210,0.4)] border border-white/20 relative z-30 flex flex-col items-center justify-center transform scale-110 z-40 transition-all hover:scale-115 duration-300 cursor-default">
+                                        <span class="material-symbols-outlined text-4xl mb-1">hub</span>
+                                        <span class="text-[10px] font-bold uppercase tracking-widest opacity-80">Live Block</span>
+                                        <span class="text-xs font-extrabold">Pre-Commit</span>
+                                     </div>
+                                     
+                                     <!-- Next Step Phase -->
+                                     <div class="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-surface to-secondary/5 border border-secondary/10 rounded-2xl shadow-xl transform rotate-[6deg] relative z-20 flex flex-col items-center justify-center backdrop-blur-md transition-all hover:-translate-y-2">
+                                        <span class="material-symbols-outlined text-secondary text-3xl opacity-70">gavel</span>
+                                        <span class="text-[10px] font-bold text-secondary mt-1 tracking-widest uppercase">Commit</span>
+                                     </div>
+                                     
+                                     <!-- Future/Locked -->
+                                     <div class="w-20 h-20 md:w-28 md:h-28 bg-surface/50 border border-on-surface/5 rounded-2xl shadow-md transform rotate-[12deg] relative z-10 flex flex-col items-center justify-center opacity-40">
+                                        <span class="material-symbols-outlined text-xl">lock</span>
+                                        <span class="text-[10px] font-bold mt-1 uppercase">Final</span>
+                                     </div>
+                                </div>
+                            </div>
+                        `
+                    },
+                    'trigger-state': {
+                        title: 'State Layer: Verkle Tree (IPA/KZG)',
+                        paras: [
+                            'Blockchains historically encounter crippling scaling walls due to "state bloat"—the relentless accumulation of user accounts, balances, and bytecode data that forces participating nodes to store dozens of gigabytes just to participate. Legacy Merkle Patricia Trees aggravate this problem severely, demanding exponential cryptographic proofs that balloon in size alongside network growth.',
+                            'VageChain permanently resolves this accumulation trap by transitioning fully to Verkle Trees (Vector Commitments + Merkle Trees). Utilizing cutting-edge polynomial commitment primitives, the underlying state structure collapses massive hierarchical lookups into consistent, constant-sized mathematical verifications, replacing wide expensive hashes with sleek geometric evaluations.',
+                            'In production execution, we implement either Inner Product Arguments (IPA) or Kate-Zaverucha-Goldberg (KZG) polynomial bindings. A cryptographic proof required to certify hundreds of discrete state transitions doesn’t accumulate into kilobytes of nested headers; rather, it collapses instantly into a single aggregated proof string under 2.5 KB.',
+                            'This immense reduction effectively transitions nodes toward a Stateless state of existence. It enables incredibly low-powered edge clients, specialized validator hardware, and standard light-node dashboards to rapidly verify the entirety of state validity in microseconds without needing local backups of massive global database datasets.',
+                            'The structural design is explicitly optimized for imminent zero-knowledge advancements. Because polynomial commitments form the exact native arithmetic syntax parsed by validity provers, this state implementation serves as an instantly convertible bedrock for future recursive SNARK/STARK integration layers, future-proofing VageChain for the generational leap in cryptographic compute.'
+                        ],
+                        diagram: `
+                            <div class="w-full relative min-h-[230px] flex flex-col justify-center px-2 overflow-visible">
+                                <div class="flex justify-around items-center relative">
+                                     <!-- Legacy Visual -->
+                                     <div class="flex flex-col items-center opacity-40 w-[40%] text-center group hover:opacity-60 transition-opacity">
+                                         <div class="w-full h-24 relative flex items-center justify-center mb-2">
+                                             <svg class="w-full h-full max-w-[120px]" viewBox="0 0 100 60" fill="none" stroke="currentColor" stroke-width="1">
+                                                 <path d="M50 10 L30 25 L15 45 M30 25 L45 45 M50 10 L70 25 L60 45 M70 25 L85 45" stroke-linecap="round" />
+                                                 <circle cx="50" cy="10" r="3" fill="currentColor"/>
+                                                 <circle cx="30" cy="25" r="3" fill="currentColor"/>
+                                                 <circle cx="70" cy="25" r="3" fill="currentColor"/>
+                                                 <circle cx="15" cy="45" r="2" fill="none" stroke="currentColor"/>
+                                                 <circle cx="45" cy="45" r="2" fill="none" stroke="currentColor"/>
+                                                 <circle cx="60" cy="45" r="2" fill="none" stroke="currentColor"/>
+                                                 <circle cx="85" cy="45" r="2" fill="none" stroke="currentColor"/>
+                                             </svg>
+                                         </div>
+                                         <span class="text-[10px] font-extrabold uppercase tracking-widest opacity-70">Merkle Tree</span>
+                                         <span class="text-[9px] text-error/80 mt-1">Dense Deep Depth</span>
+                                     </div>
+                                     
+                                     <!-- Elegant Modern Gradient Spacer -->
+                                     <div class="h-28 w-[1px] bg-gradient-to-b from-transparent via-on-surface/10 to-transparent"></div>
+                                     
+                                     <!-- Vage Verkle Visual -->
+                                     <div class="flex flex-col items-center w-[40%] text-center group hover:scale-105 transition-transform duration-300">
+                                         <div class="w-full h-24 relative flex items-center justify-center mb-2">
+                                             <svg class="w-full h-full max-w-[120px]" viewBox="0 0 100 60" fill="none" stroke="currentColor" stroke-width="2">
+                                                 <!-- Shallow vectors radiating instantly -->
+                                                 <path d="M50 10 L10 45 M50 10 L30 45 M50 10 L70 45 M50 10 L90 45" class="text-tertiary opacity-20" stroke-linecap="round" />
+                                                 <!-- Active Path -->
+                                                 <path d="M50 10 L50 45" stroke-width="3" stroke="url(#polyGrad)" stroke-linecap="round" />
+                                                 <defs>
+                                                     <linearGradient id="polyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                         <stop offset="0%" stop-color="#842bd2" />
+                                                         <stop offset="100%" stop-color="#007a8f" />
+                                                     </linearGradient>
+                                                 </defs>
+                                                 <circle cx="50" cy="10" r="5" fill="#842bd2" class="shadow-xl"/>
+                                                 <circle cx="50" cy="45" r="5" fill="#007a8f" class="shadow-xl"/>
+                                             </svg>
+                                         </div>
+                                         <span class="text-[10px] font-extrabold uppercase tracking-widest bg-gradient-to-r from-primary to-tertiary bg-clip-text text-transparent">Verkle Tree</span>
+                                         <span class="text-[9px] text-tertiary font-bold mt-1">Flat Polynomial</span>
+                                     </div>
+                                </div>
+                                <!-- Descriptive Metric Bubble -->
+                                <div class="mt-6 self-center text-[10px] font-mono bg-surface border border-on-surface/5 rounded-full px-4 py-1 shadow-sm text-on-surface/60 flex items-center gap-2">
+                                     <div class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></div>
+                                     Proof Size Reduction: ~98%
+                                </div>
+                            </div>
+                        `
+                    }
+                };
+
+                const section = document.getElementById('robots-section');
+                const parallaxElements = document.querySelectorAll('[data-parallax-x], [data-parallax-y]');
+                
+                // UI ELEMENTS
+                const panel = document.getElementById('detail-panel');
+                const contentEl = document.getElementById('detail-content');
+                const closeBtn = document.getElementById('close-panel');
+                
+                // SETUP CLICK LISTENERS
+                ['trigger-mempool', 'trigger-execution', 'trigger-consensus', 'trigger-state'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if(!el) return;
+                    el.addEventListener('click', () => {
+                        const data = contentDB[id];
+                        // Clear prev active typing if set
+                        if(activeTypingTimer) clearTimeout(activeTypingTimer);
+                        
+                        // Toggle off active grayscales
+                        document.querySelectorAll('[id^="trigger-"] img').forEach(i => i.classList.add('grayscale'));
+                        el.querySelector('img').classList.remove('grayscale');
+                        
+                        // Generate HTML
+                        let html = `
+                            <h2 id="panel-heading-inject" class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-on-surface to-on-surface-variant bg-clip-text text-transparent tracking-tight mb-4 flex items-center min-h-[44px] whitespace-normal break-words"></h2>
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                                <div class="lg:col-span-7 space-y-6 text-on-surface-variant/90 leading-relaxed font-body">
+                                    <p class="font-semibold text-on-surface text-lg">${data.paras[0]}</p>
+                                    <p>${data.paras[1]}</p>
+                                </div>
+                                <div class="lg:col-span-5 flex flex-col justify-center bg-gradient-to-br from-on-surface/[0.02] to-transparent rounded-2xl p-4">
+                                     ${data.diagram}
+                                </div>
+                            </div>
+                            <div class="space-y-6 text-on-surface-variant/90 leading-relaxed font-body">
+                                <p>${data.paras[2]}</p>
+                                <p>${data.paras[3]}</p>
+                                <p class="italic border-l-4 border-primary/30 pl-4 bg-on-surface/5 p-4 rounded-r-lg">${data.paras[4]}</p>
+                            </div>
+                        `;
+                        
+                        contentEl.innerHTML = html;
+                        
+                        // Start typing title
+                        const headEl = document.getElementById('panel-heading-inject');
+                        if(headEl) typeWriterPanel(headEl, data.title);
+                        
+                        // Open Panel
+                        panel.style.maxHeight = "2000px";
+                        panel.style.opacity = "1";
+                        panel.style.marginTop = "3rem";
+                        panel.style.marginBottom = "3rem";
+                        
+                        // Smooth scroll down a bit
+                        setTimeout(() => {
+                            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 100);
+                    });
+                });
+                
+                // Close Handlers
+                closeBtn.addEventListener('click', () => {
+                    if(activeTypingTimer) clearTimeout(activeTypingTimer);
+                    panel.style.maxHeight = "0";
+                    panel.style.opacity = "0";
+                    panel.style.marginTop = "0";
+                    panel.style.marginBottom = "0";
+                    document.querySelectorAll('[id^="trigger-"] img').forEach(i => i.classList.remove('grayscale'));
+                });
+
+                // PARALLAX LOGIC
+                let ticking = false;
+                window.addEventListener('scroll', () => {
+                    if (!ticking) {
+                        window.requestAnimationFrame(() => {
+                            const rect = section.getBoundingClientRect();
+                            const windowHeight = window.innerHeight;
+                            // Calculate how far section has scrolled into view
+                            let progress = 1 - ((rect.top - 200) / (windowHeight - 200));
+                            if (progress < 0) progress = 0;
+                            if (progress > 1) progress = 1;
+                            
+                            // Cubic ease-out to make it snap into position smoothly
+                            const easeOut = 1 - Math.pow(1 - progress, 3);
+                            
+                            parallaxElements.forEach(el => {
+                                const speedX = parseFloat(el.getAttribute('data-parallax-x') || 0);
+                                const speedY = parseFloat(el.getAttribute('data-parallax-y') || 0);
+                                
+                                // Decrease distance to 0 as progress hits 100%
+                                const xPos = speedX * (1 - easeOut);
+                                const yPos = speedY * (1 - easeOut);
+                                // Don't destroy potential user interaction hover scales completely, but apply base transform
+                                // note: we use template literals instead of replacing transform, avoiding overriding explicit hover scales 
+                                el.style.transform = `translate(${xPos}px, ${yPos}px)`;
+                                // Add a dynamic fade-in
+                                el.style.opacity = Math.min(1, progress * 1.5);
+                            });
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                });
+            });
+        </script>
+    </section>
+
+
+    <app-footer _nghost-ng-c1232209807="">
+        <footer _ngcontent-ng-c1232209807="" class="footer">
+            <div _ngcontent-ng-c1232209807="" class="footer-main-content">
+                <div _ngcontent-ng-c1232209807="" class="grid-container">
+                    <div _ngcontent-ng-c1232209807="" class="grid-row footer-inner">
+                        <div _ngcontent-ng-c1232209807="" class="grid-col col-xs-4 col-sm-8 col-md-4">
+                            <p _ngcontent-ng-c1232209807="" class="footer-title heading-5">Built for Fairness and
+                                Progress</p>
+                        </div>
+                        <div _ngcontent-ng-c1232209807="" class="grid-col col-xs-4 col-sm-4 col-md-3 col-md-offset-2">
+                            <div _ngcontent-ng-c1232209807="" class="footer-nav-section"><a _ngcontent-ng-c1232209807=""
+                                    class="call-to-action call-to-action--nav" href="./index.html"> VageChain Core </a><a
+                                    _ngcontent-ng-c1232209807="" class="call-to-action call-to-action--nav"
+                                    href="https://github.com/VageChain" target="_blank"> Block Explorer </a><a _ngcontent-ng-c1232209807=""
+                                    class="call-to-action call-to-action--nav" href="./architecture.html"> Dev Docs </a><!---->
+                            </div>
+                        </div>
+                        <div _ngcontent-ng-c1232209807="" class="grid-col col-xs-4 col-sm-4 col-md-3">
+                            <div _ngcontent-ng-c1232209807="" class="footer-nav-section"><a _ngcontent-ng-c1232209807=""
+                                    class="call-to-action call-to-action--nav" href="./whitepaper.pdf" target="_blank"> Whitepaper </a><a
+                                    _ngcontent-ng-c1232209807="" class="call-to-action call-to-action--nav"
+                                    href="./roadmap.html"> Vision & Roadmap </a><a _ngcontent-ng-c1232209807=""
+                                    class="call-to-action call-to-action--nav" href="https://github.com/VageChain" target="_blank"> Community Hub
+                                </a><!----></div>
+                        </div><!---->
+                    </div>
+                </div>
+            </div>
+            <div _ngcontent-ng-c1232209807="" class="footer-img-container">
+                <div _ngcontent-ng-c1232209807="" class="grid-container">
+                    <div class="footer-vagechain">
+                        <span>V</span><span>a</span><span>g</span><span>e</span><span>&nbsp;</span><span>C</span><span>h</span><span>a</span><span>i</span><span>n</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </app-footer>
+</body>
+
+</html>
